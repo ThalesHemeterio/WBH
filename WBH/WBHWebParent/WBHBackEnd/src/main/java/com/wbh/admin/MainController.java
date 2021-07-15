@@ -10,4 +10,9 @@ public class MainController {
 	public String viewHomePage() {
 		return "index";
 	}
+	
+	@GetMapping("/index")   // handle HHTP requests
+	public String viewIndex() {
+		return "index";
+	}
 }

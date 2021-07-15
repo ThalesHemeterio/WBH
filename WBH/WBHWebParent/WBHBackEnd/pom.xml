@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.wbh</groupId>
-	<artifactId>WBHWebParent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+		<artifactId>WBHWebParent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>WBHBackEnd</artifactId>
 	<name>WBHBackEnd</name>
@@ -13,8 +13,14 @@
 	<properties>
 		<java.version>16</java.version>
 	</properties>
+	
 	<dependencies>
 
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-devtools</artifactId>
+		<optional>true</optional>
+	</dependency>
 	</dependencies>
 
 	<build>
