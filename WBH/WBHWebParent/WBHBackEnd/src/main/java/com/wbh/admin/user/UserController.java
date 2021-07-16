@@ -23,13 +23,15 @@ public class UserController {
 		
 		@GetMapping("/users")
 		public String listfirstPage(Model model) {
-			return listByPage(1,model, "firstName", "asc");
+			return listByPage(1,model, "firstName", "asc",null);
 		}
 		
 		@GetMapping("/users/page/{pageNum}")
-		public String listByPage(@PathVariable(name="pageNum") int pageNum, Model model, 
-					@Param("sortField") String sortField, @Param("sortDir") String sortDir) {
-			Page<User> page = service.listByPage(pageNum, sortField, sortDir);
+		public String listByPage(
+					@PathVariable(name="pageNum") int pageNum, Model model, 
+					@Param("sortField") String sortField, @Param("sortDir") String sortDir,
+					@Param("keyword") String keyword) {
+			Page<User> page = service.listByPage(pageNum, sortField, sortDir,keyword);
 			List<User> listUsers = page.getContent();
 			
 			long startCount =(pageNum-1)*UserService.USERS_PER_PAGE+1;
@@ -39,6 +41,8 @@ public class UserController {
 			}
 			
 			String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+			
+			//passing the attributes to the view
 			model.addAttribute("currentPage", pageNum);
 			model.addAttribute("totalPages", page.getTotalPages());
 			model.addAttribute("startCount", startCount);
@@ -48,7 +52,8 @@ public class UserController {
 			model.addAttribute("sortField",sortField);
 			model.addAttribute("sortDir",sortDir);
 			model.addAttribute("reverseSortDir",reverseSortDir);
-	
+			model.addAttribute("keyword", keyword);
+			
 			return "users";
 		}
 		
@@ -69,7 +74,14 @@ public class UserController {
 			service.save(user);
 			
 			redirectAttributes.addFlashAttribute("message", "The User has been saved successfully.");
-			return "redirect:/users";
+			
+			
+			return getRedirectURLtoAffectedUser(user);
+		}
+
+		private String getRedirectURLtoAffectedUser(User user) {
+			String firstPartOfEmail = user.getEmail().split("@")[0];
+			return "redirect:/users/page/1?sortField=id&sortDir=asc&keyword="+ firstPartOfEmail;
 		}
 		
 		@GetMapping("/user/edit/{id}")

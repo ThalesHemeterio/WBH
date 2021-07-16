@@ -11,8 +11,10 @@ public class MainController {
 		return "index";
 	}
 	
-	@GetMapping("/index")   // handle HHTP requests
-	public String viewIndex() {
-		return "index";
+	@GetMapping("/login")   // handle HHTP requests
+	public String viewLogin() {
+		return "login";
 	}
+	
+	
 }

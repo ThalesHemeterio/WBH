@@ -1,26 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>Project Thales NCI</title>
-<link rel="shortcut icon" th:href="@{/img/2618.png}">
-<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
-<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
-<link rel="stylesheet" type="text/css" th:href="@{/style.css}"/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap" />
-<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Project Thales NCI</title>
+	<link rel="shortcut icon" th:href="@{/img/2618.png}">
+	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/style.css}"/>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap" />
+	<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </head>
 <body>
 	<div id="navigation-sticky">
 
 		<!-- Navigation -->
+		<form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+			<input type="submit"/>
+		</form>
 		<nav class="navbar bg-light navbar-light navbar-expand-lg sticky-top">
 			<div class="container">
 				<!-- Logo -->
-				<a href="index.html" class="navbar-brand"><img th:src="@{/img/2618.png}" alt="Logo" title="Logo"></a>
+				<a th:href="@{/index}" class="navbar-brand"><img th:src="@{/img/2618.png}" alt="Logo" title="Logo"></a>
 				<!-- Dropdown Menu -->
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=#navbarResponsive>
 						<span class="navbar-toggler-icon"></span>
@@ -38,7 +42,14 @@
 								class="nav-link">Clients</a></li>
 							<li class="nav-item"><a th:href="@{/}" 
 								class="nav-link">Sessions</a></li>
-
+								<li class="nav-item"><a href="" id="logoutLink" 
+								class="nav-link">Logout</a></li>
+							<li>
+								<span class=" nav-item nav-link fas fa-user"></span>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" sec:authentication="principal.fullname"></a></li>
+							<li>
 						</ul>
 					</div>
 			</div>
@@ -136,6 +147,14 @@
 		</p>
 	</div>
 	<!-- End Socket -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#logoutLink").on("click", function(e){
+			e.preventDefault();
+			document.logoutForm.submit();
+		});
+	});
 
+</script>
 </body>
 </html>

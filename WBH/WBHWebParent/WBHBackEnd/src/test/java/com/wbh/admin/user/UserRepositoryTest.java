@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 
 import com.wbh.common.entity.Role;
@@ -137,8 +138,45 @@ public class UserRepositoryTest {
 		assertThat(listUsers.size()).isEqualTo(pageSize);
 	}
 	
-	*/
+	
 	
 	@Test
-	public void testSearch
+	public void testSearchUsers() {
+		String keyword = "Thales";
+		int pageNumber = 0;
+		int pageSize = 4;
+		Pageable pegeable = PageRequest.of(pageNumber,pageSize);
+		Page<User> page = repo.findAll(keyword,pegeable);
+		
+		List<User> listUsers = page.getContent();
+		
+		listUsers.forEach(user -> System.out.println(user));
+		
+		assertThat(listUsers.size()).isGreaterThan(0);
+	}
+
+	@Test
+	public void getUserById() {
+		User userThales = repo.findById(1).get();
+		System.out.println(userThales);
+		userThales.setEnabled(true);
+		assertThat(userThales).isNotNull();
+	}
+	
+	@Test
+	public void testCreateUser() {
+		Role roleAdmin = entityManager.find(Role.class, 1);
+		User userAmdin = new User("admin@admin.com", "123456", "Thales", "Hemeterio",  "23/03/1992", "083 067 8284", "34,Royston Kimmage");
+		userAmdin.addRole(roleAdmin);
+		userAmdin.setEnabled(true);
+		
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String rawPassword = "123456";
+		String encodedPassword = passwordEncoder.encode(rawPassword);
+		userAmdin.setPassword(encodedPassword);
+		
+		repo.save(userAmdin);
+
+	}
+		*/
 }
