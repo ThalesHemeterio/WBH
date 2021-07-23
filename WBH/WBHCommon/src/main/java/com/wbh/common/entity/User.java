@@ -180,4 +180,10 @@ public class User {
 	public String getFullName() {
 		return firstName + " " + lastName;
 	}
+	
+	@Transient
+	public String getPhotosImagePath() {
+		if(id==null || photos == null) return "/img/default-user.png";
+		return "/user-photos/"+this.id+"/"+this.photos;
+	}
 }

@@ -1,21 +1,65 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<head th:fragment="page_head(title)">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>[[${title}]]</title>
+<link rel="shortcut icon" th:href="@{/img/2618.png}">
+<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap" />
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
 <body>
-	<th th:fragment="column_link(fieldName, collumnLabel, removeTag)" th:remove="${removeTag}"> 
-		<a class="text-dark"
-		th:href="@{'/users/page/' +${currentPage} + '?sortField='+ ${fieldName} +'&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">
-		[[${collumnLabel}]]
-		</a>					
-		<span th:if="${sortField == fieldName}"
-		 th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"> </span>
-	</th>
+	<th th:fragment="column_link(fieldName, collumnLabel, removeTag)" th:remove="${removeTag}">
+		<a class="text-dark" th:href="@{'/users/page/' +${currentPage} + '?sortField='+ ${fieldName} +'&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">
+			[[${collumnLabel}]] </a> <span th:if="${sortField == fieldName}"
+		th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}">
+	</span></th>
 	
-	<a th:fragment="page_link(pageNum, label)"
-		class="page-link" 
+	<th th:fragment="column_link2(fieldName, collumnLabel, removeTag)" th:remove="${removeTag}">
+		<a class="text-dark" th:href="@{'/professionals/page/' +${currentPage} + '?sortField='+ ${fieldName} +'&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">
+			[[${collumnLabel}]] </a> <span th:if="${sortField == fieldName}"
+		th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}">
+	</span></th>
+	
+	<th th:fragment="column_link3(fieldName, collumnLabel, removeTag)" th:remove="${removeTag}">
+		<a class="text-dark" th:href="@{'/customers/page/' +${currentPage} + '?sortField='+ ${fieldName} +'&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">
+			[[${collumnLabel}]] </a> <span th:if="${sortField == fieldName}"
+		th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}">
+	</span></th>
+
+	<a th:fragment="page_link(pageNum, label)" class="page-link"
 		th:href="@{'/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
+
+	<a th:fragment="page_link2(pageNum, label)" class="page-link"
+		th:href="@{'/professionals/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
+
+	<a th:fragment="page_link3(pageNum, label)" class="page-link"
+		th:href="@{'/customers/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
+		
+	<div th:fragment="category_status" th:remove="tag">
+		<a th:if="${category.enabled == true}" class="fas fa-check-circle icon-green fa-2x" 
+			th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
+			title="Disable this category"></a>
+		<a th:if="${category.enabled != true}" class="far fa-circle icon-red fa-2x " 
+			th:href="@{'/categories/' + ${category.id} + '/enabled/true'}"
+			title="Enable this category"></a>
+	</div>
+	<div th:fragment="category_actions" th:remove="tag">
+		<a class="fas fa-edit icon-green fa-2x" th:href="@{'/category/edit/' +${category.id}}" title="Edit this user"></a>
+						&nbsp; 
+		<th:block th:if="${category.hasChildren == false}">
+		<a class="fas fa-trash icon-dark fa-2x link-delete" 
+			th:href="@{'/categories/delete/' +${category.id}}" 
+			th:userId="${category.id}" 
+			title="Delete this user"></a>
+		</th:block>
+	</div>
+
 </body>
 </html>

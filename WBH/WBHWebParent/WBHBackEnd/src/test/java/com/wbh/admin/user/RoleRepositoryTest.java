@@ -15,10 +15,10 @@ import com.wbh.common.entity.Role;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
 public class RoleRepositoryTest {
-/*	
+	
 	@Autowired
 	private RoleRepository repo;
-	
+	/*	
 	@Test
 	public void testCreateFirstRole() {
 		Role roleAdmin = new Role("Admin", "Manage everything");
@@ -38,5 +38,11 @@ public class RoleRepositoryTest {
 		assertThat(savedRole2.getId()).isGreaterThan(0);
 		assertThat(savedRole3.getId()).isGreaterThan(0);
 	}
+	
+	@Test
+	public void testCreateRestofRoles() {
+		Role roleAss = new Role("Assistant", "Manage their accounts, enable user professionals, approve reviews");
+		repo.save(roleAss);
+		}
 	*/
 }

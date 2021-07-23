@@ -44,6 +44,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
+			.antMatchers("/users/**").hasAuthority("Admin")
+			.antMatchers("/customers/**").hasAuthority("Admin")
+			.antMatchers("/categories/**").hasAuthority("Admin")
+			.antMatchers("/professionals/**").hasAuthority("Admin")
 			.anyRequest().authenticated()
 			.and()
 			.formLogin()
@@ -51,7 +55,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.defaultSuccessUrl("/", true)
 				.usernameParameter("email")
 				.permitAll()
-				.and().logout().permitAll();
+				.and().logout().permitAll()
+				.and()
+					.rememberMe()
+					.key("AbcDefgHijKlmOpqrs_1234567890")
+					.tokenValiditySeconds(7*24*60*60); //cookies valid for 1 week
 		}
 
 		@Override

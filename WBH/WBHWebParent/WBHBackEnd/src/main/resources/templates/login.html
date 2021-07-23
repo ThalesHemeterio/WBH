@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>Login WBH</title>
-<link rel="shortcut icon" th:href="@{/img/2618.png}">
-<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
-<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
-<link rel="stylesheet" type="text/css" th:href="@{/style.css}"/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap" />
-</head>
+<head th:replace="fragments :: page_head('Login -  WBH')" />
 <body>
 	<div id="navigation-sticky">
 
@@ -48,7 +38,12 @@
 							<div class="input">
 							  <input type="password" class="form-control" name="password" placeholder="Passowrd" required>
 							</div>
-						  </div>
+						  </div>					
+						<div class="row p-2">
+							<div class="input">
+								<input type="checkbox" name="remember-me" />&nbsp; Remember Me
+							</div>
+						</div>
 						<div class="row p-2">
 							<div class="input">
 								<input type="submit" class="btn float-left btn-dark btn-lg" value= "Login"/>
@@ -59,56 +54,7 @@
 
 	<!-- End of the content -->
 	
-	<!-- Start Footer -->
-	<footer>
-		<div class="container">
-			<div class="row justify-content-center text-center tex-light">
-				<div class="col-md-9">
-					<img th:src="@{/img/2618.png}" alt="Logo" title="Logo">
-					<p>WBH HELPING YOU!</p>
-				</div>
-				<div class="col-md-4">
-					<hr class="bg-light">
-					<h5>Contact</h5>
-					<hr class="bg-light">
-					<p>555-5555-5555</p>
-					<p>Email</p>
-					<p>100 Addres</p>
-					<p>city</p>
-					<p>Country</p>
-				</div>
-				<div class="col-md-4">
-					<hr class="bg-light">
-					<h5>Our Hours</h5>
-					<hr class="bg-light">
-					<p>Monday: 9am - 7am</p>
-					<p>Saturday: 10am - 5pm</p>
-					<p>Sunday: Closed</p>
-				</div>
-				<div class="col-md-4">
-					<hr class="bg-light">
-					<h5>Service area</h5>
-					<hr class="bg-light">
-					<p>Dublin</p>
-
-				</div>
-
-
-
-			</div>
-		</div>
-	</footer>
-
-	<!-- End Footer -->
-
-
-	<!-- Start Socket -->
-	<div class="socket text-light text-center py-4">
-		<p>
-			&copy;<a href="#" target="_blank">wbh.com</a>
-		</p>
-	</div>
-	<!-- End Socket -->
+	<div th:replace="navigation :: footer"></div>
 
 </body>
 </html>

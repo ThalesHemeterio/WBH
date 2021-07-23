@@ -31,6 +31,10 @@ public class UserService {
 	@Autowired 
 	private PasswordEncoder passwordEncoder;
 	
+	public User getByEmail(String email) {
+		return userRepo.getUserByEmail(email);
+	}
+	
 	public List<User> listAll(){
 		return (List<User>) userRepo.findAll();
 	}
@@ -52,7 +56,7 @@ public class UserService {
 		
 	}
 
-	public void save(User user) {
+	public User save(User user) {
 		boolean isUpdatingUser = (user.getId()!=null);								
 		
 		if(isUpdatingUser) {														// checking if you're are editing or creating a user if the same email.
@@ -66,7 +70,7 @@ public class UserService {
 		}else {
 			encodePassword(user);
 		}
-		userRepo.save(user);
+		return userRepo.save(user);
 	}
 	
 	public void encodePassword(User user) {											// Function responsible for encoding the password 		
@@ -107,6 +111,23 @@ public class UserService {
 		}
 		
 		userRepo.deleteById(id);
+	}
+	
+	public User updateAccount(User userInForm) {     // updates an account of a logged user
+		User userInDB = userRepo.findById(userInForm.getId()).get();
+		
+		if(!userInForm.getPassword().isEmpty()) {
+			userInDB.setPassword(userInForm.getPassword());
+			encodePassword(userInDB);
+		}
+		
+		if(userInForm.getPhotos() !=null) {
+			userInDB.setPhotos(userInForm.getPhotos());
+		}
+
+		userInDB.setFirstName(userInForm.getFirstName());
+		userInDB.setLastName(userInForm.getLastName());
+		return userRepo.save(userInDB);
 	}
 	
 	public void updateUserEnabledStatus(Integer id, boolean enabled) {   // function to update enabled/disabled status of the user

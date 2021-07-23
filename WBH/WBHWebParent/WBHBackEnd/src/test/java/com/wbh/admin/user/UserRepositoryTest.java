@@ -162,11 +162,11 @@ public class UserRepositoryTest {
 		userThales.setEnabled(true);
 		assertThat(userThales).isNotNull();
 	}
-	
+	*/
 	@Test
 	public void testCreateUser() {
 		Role roleAdmin = entityManager.find(Role.class, 1);
-		User userAmdin = new User("admin@admin.com", "123456", "Thales", "Hemeterio",  "23/03/1992", "083 067 8284", "34,Royston Kimmage");
+		User userAmdin = new User("thales@admin.com", "123456", "Thales", "Hemeterio",  "23/03/1992", "083 067 8284", "34,Royston Kimmage");
 		userAmdin.addRole(roleAdmin);
 		userAmdin.setEnabled(true);
 		
@@ -178,5 +178,5 @@ public class UserRepositoryTest {
 		repo.save(userAmdin);
 
 	}
-		*/
+		
 }
