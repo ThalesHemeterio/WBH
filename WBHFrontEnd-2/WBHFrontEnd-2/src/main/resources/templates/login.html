@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="fragments :: page_head('Login -  WBH')" />
+<body>
+	<div id="navigation-sticky">
+		<div th:replace="navigation2 :: menu"></div>
+		<div th:replace="navigation2 :: social_menu"></div>
+	</div>
+	<!-- Content -->
+	<div class="col-12 text-center mt-5">
+		<h1 class="display-4 pt-4">LogIn Professional</h1>
+		<div class="border-top border-dark w-50 mx-auto my-3"></div>
+		<p class="lead">We have multiple services that can improve your
+			well-being!</p>
+	</div>
+	<!-- Section to be filled-->
+	<div class="container-fluid text-center border border-secondary rounded p-3 mb-5" style="max-width: 500px; margin: 0 auto!important">
+		<h5 class="font-weight-bold mb-1">Please fill the information bellow:</h5>
+		<form th:action="@{/login}" method="post">
+			<div th:if="${param.error}">
+				<p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+			</div>
+			<div th:if="${param.logout}">
+				<p class="text-warning">You have been logged out</p>
+			</div>
+			<div class="row p-2">
+				<div class="input">
+					<input type="email" class="form-control" name="email"
+						placeholder="Email" required>
+				</div>
+			</div>
+			<div class="row p-2">
+				<div class="input">
+					<input type="password" class="form-control" name="password"
+						placeholder="Passowrd" required>
+				</div>
+			</div>
+			<div class="row p-2">
+				<div class="input">
+					<input type="checkbox" name="remember-me" />&nbsp; Remember Me
+				</div>
+			</div>
+			<div class="row p-2">
+				<div class="input">
+					<input type="submit" class="btn float-left btn-dark btn-lg"
+						value="Login" />
+				</div>
+			</div>
+		</form>
+	</div>
+	<div>&nbsp;</div>
+
+	<!-- End of the content -->
+
+	<div th:replace="navigation2 :: footer"></div>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+/*-- Reset --*/
+html, body {
+  overflow-x: hidden;
+  height: 100%;
+  width: 100%;
+  font-family: 'Kanit', sans-serif;
+  font-size: large;
+  color:#05386b;
+}
+
+/*============= NAVIGATION =============*/
+.navbar-brand img{
+  height: 2.3rem;
+}
+.navbar{
+  background: linear-gradient(to right, #5cdb95, #8ee4af);
+  font-size:1.4rem;
+  text-transform: uppercase;  
+  box-shadow: 0 .5rem .5rem rgba(0, 0, 0, .1);
+  border-bottom:.1rem solid rgb(212, 232, 250);
+}
+.nav-item{
+  padding: .9rem;
+}
+.nav-link{
+  color:#05386b!important;
+  font-size: large!important;
+}
+.nav-link.active,
+.nav-link:hover{
+  color:rgb(244, 248, 244)!important;
+}
+
+/*============= CAROUSEL =============*/
+.carousel-inner{
+  max-height:40rem!important;
+}
+
+/*---Change Carousel Transition Speed --*/
+.carousel-item-next,
+.carousel-item-prev,
+.carousel-item.active{
+  transition: ttransform 1.2s ease;
+}
+
+.carousel-indicators li{
+  width: 40px;
+  height: 6px;
+  margin: 4px;
+}
+/*-- Carousel Content --*/
+.carousel-caption{
+  position: absolute;
+  top:50%;
+  transform: translateY(-30%);
+  right: 0%;
+}
+
+.bg-dark{
+  background-color: rgba(0, 0, 0, .7)!important;
+  border-radius: 1.5rem;
+  padding: 1rem;
+}
+
+/*============= SOCIAL MEDIA STICKY BAR =============*/
+
+.jumbotron {
+  background: linear-gradient(to right,  #5cdb95, #8ee4af);
+  padding: 1rem 0 .5rem;
+  margin-bottom: 0;
+  border-radius: 0;
+  box-shadow: 0 .5rem .5rem rgba(0, 0, 0, .1);
+}
+ul.social {
+  list-style-type: none;
+  display: flex;
+  padding:0;
+  margin: 0 auto;
+}
+
+ul.social li{
+  margin: 0 auto;
+}
+
+.jumbotron .svg-inline--fa{
+  font-size: 2rem;
+  margin: 0 1rem;
+}
+
+.jumbotron .svg-inline--fa:hover{
+ color:grey!important;
+}
+
+/*============= COLUMN CONTENT =============*/
+.fa-square{
+  opacity: .05;
+}
+
+/*============= TWO COLUMN CONTENT =============*/
+.container2{
+  padding-bottom: 3rem;
+}
+
+/*============= FORMS =============*/
+
+
+
+*.icon-white { color: white;}
+*.icon-silver { color: silver;}
+*.icon-green { color: green;}
+*.icon-dark { color: grey;}
+*.icon-red { color: red;}
+
+
+/*============= FOOTER =============*/
+footer{
+  border-top:.1rem solid rgb(212, 232, 250);
+  background: linear-gradient(to right, #5cdb95, #8ee4af)!important;
+  padding:0.5rem 0.5rem 0.5rem;
+  font-size:15px;
+  box-shadow: .5rem .5rem .5rem rgba(0.1, 0.1, 0.1, .1);
+}
+footer img{
+  height:3.5rem;
+  margin:1.5rem auto;
+}
+
+footer a
+.socket a{
+  color:#05386b;
+  text-decoration: none;
+}
+
+footer a:hover
+.socket a:hover{
+  color:white;
+  text-decoration: none;
+}
+
+/*============= SOCKET =============*/
+
+.socket{
+  background-color:#03284d;
+  border-top:.1rem solid grey;
+  color:white;
+  padding:0;
+  margin: 0 auto;
+}
+
+/*============= MEDIA QUERIES =============*/
+
+@media screen and (max-width: 768px) {
+	/* small screen */
+	div.full-details { display:none; }
+	div.less-details { display:block; }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+/* medium screen */
+	div.full-details { display:block; }
+	div.less-details { display:none; }
+	.hideable-column { display: none}
+}
+
+@media screen and (min-width: 1024px) {
+ /* large screen */
+	div.less-details { display:none; }
+	.hideable-column { display: table-cell}
+
+}
