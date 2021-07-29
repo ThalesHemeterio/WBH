@@ -143,6 +143,11 @@ public class Category {
 		this.hasChildren = hasChildren;
 	}
 	
+	@Override
+	public String toString() {
+		return name;
+	}
+
 	@Transient
 	private boolean hasChildren;
 }

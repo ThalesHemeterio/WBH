@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<head th:replace="fragments :: page_head('Search -  WBH')" />
+</head>
+
+<body>
+    <div id="navigation-sticky">
+
+	<div th:replace="navigation2 :: menu_auth"></div>
+	<div th:replace="navigation2 :: social_menu"></div>
+
+        <!-- Main Page Heading -->
+        <div class="col-12 text-center mt-5">
+            <hi class="display-4 pt-4">Search Professionals</hi>
+            <div class="border-top border-dark w-50 mx-auto my-3"></div>
+            <p class="lead">Find you professional Now!</p>
+
+        </div>
+        <!-- Section to be filled-->
+        <!-- Filter -->
+	<div class="text-center">
+		<form th:action="@{/search/page/1}" class="form-inline m-3">
+			<input type="hidden" name="sortField" th:value="${sortField}" />
+			<input type="hidden" name="sortDir" th:value="${sortDir}" />
+			Filter:&nbsp;
+			<input type="search"  name="keyword" th:value="${keyword}" class="col-sm-4" required/>
+			&nbsp;&nbsp;
+			<button type="submit" title="Search" class="btn btn-primary">
+				<i class="fas fa-search"></i>
+			</button>
+			&nbsp;&nbsp;
+			<button type="button" title="Clear Search" class="btn btn-secondary" onclick="clearFilter()">
+				<i class="fas fa-eraser"></i>
+			</button>
+		</form>
+	</div>
+        <div class="container signform">
+            <div th:each = "sessionn : ${listSessions}" class="row py-4">
+                <div class="sign col-lg-12 mb-4 my-lg-auto">
+                    <div class="row">
+                        <div class="col-3">
+                            <img src="img/avatar.png" alt="" class="w-100">
+                        </div>
+                        <div class="col-9">
+                            <form action="index.html" onsubmit="index.html">
+                                <div class="row">
+                                    <div class="output col-5">
+                                        <h5>[[${sessionn.professional}]]</h5>
+                                    </div>
+                                    <div class="output col-6">
+                                        <h5>Category: [[${sessionn.categories}]]</h5>
+                                    </div>
+                                    <div class="output col-1">
+                                        <a href="#" class="btn float-right btn-outline-dark">Reviews</a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="output col-5">
+                                        <h6></h6>
+                                    </div>
+                                    <div class="output col-7">
+                                        <h6></h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="output col-12">
+                                        <h8></h8>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="output col-12">
+                                        <h8>Description: [[${sessionn.description}]]</h8>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="output col-5">
+                                        <h5>Session duration: [[${sessionn.duration}]]</h5>
+                                    </div>
+                                    <div class="output col-6">
+                                        <h5>Price: [[${sessionn.price}]] </h5>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="output col-9">
+                                        <h6>Please Chack availability: </h6>
+                                        <select>
+                                            <option value="">Select a session</option>
+                                            <option value="option">[[${sessionn.date}]] + [[${sessionn.startTime}]]</option>
+                                        </select>
+                                    </div>
+                                    <div class="output col-3">
+                                        <a href="#" class="btn float-left btn-outline-dark btn-lg">Book Now</a>
+                                    </div>
+                                </div>
+                                <div class="row"></div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- End of Section to be filled-->
+
+    </div> <!-- End Social Media Sticky -->
+
+<!-- Pagination -->
+	<div class="text-center m-1"  th:if="${totalItems >0}">
+		<span> Showing users [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+	</div>
+	<div class="text-center m-1"  th:unless="${totalItems >0}">
+		<span> No Users Found</span>
+	</div>
+	<div th:if="${totalPages > 1}">
+	<nav>
+  		<ul class="pagination justify-content-center flex-wrap">
+		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragments :: page_link(1, 'First')"></a>
+		    </li>
+		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragments :: page_link(${currentPage-1}, 'Previous')"></a>
+		    </li>
+		    
+		    <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" 
+		    	th:each="i : ${#numbers.sequence(1,totalPages)}">
+		    	<a th:replace="fragments :: page_link(${i}, ${i})"></a>
+		    </li>
+		    
+		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragments :: page_link(${currentPage+1}, 'Next')"></a>
+		    </li>
+		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragments :: page_link(${totalPages}, 'Last')"></a>
+		    </li>
+ 	 	</ul>
+	</nav>
+	</div>
+	<!-- End of Pagination -->
+ 
+
+    <!-- Script Source Files -->
+
+    <!-- jQuery -->
+  
+	<div th:replace="navigation2 :: footer"></div>
+	
+    <!-- End Script Source Files -->
+</body>
+
+</html>

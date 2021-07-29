@@ -18,5 +18,9 @@ public interface ProfessionalRepository extends CrudRepository<Professional, Int
 	@Query("UPDATE Professional p SET p.enabled = true WHERE p.id =?1")
 	@Modifying
 	public Professional enable(Integer id);
+	
+	@Query("UPDATE Professional p SET p.enabled = false, p.verificationCode = null WHERE p.id =?1")
+	@Modifying
+	public void verify(Integer id);
 
 }

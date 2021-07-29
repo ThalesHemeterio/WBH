@@ -61,12 +61,10 @@ public class Session {
 
 	
 	
-	public Session(String name, String description, Date createdTime, String duration, String startTime, String date,
+	public Session(String name, String description, String duration, String startTime, String date,
 			float price) {
-		super();
 		this.name = name;
 		this.description = description;
-		this.createdTime = createdTime;
 		this.duration = duration;
 		this.startTime = startTime;
 		this.date = date;

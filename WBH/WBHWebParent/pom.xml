@@ -22,6 +22,7 @@
 	<modules>
 		<module>WBHBackEnd</module>
 		<module>WBHFrontEnd</module>
+		<module>WBHFrontEnd-2</module>
 	</modules>
 
 	<dependencies>
@@ -64,6 +65,11 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>5.0.1</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.webjars.npm</groupId>
+   			<artifactId>rich-text</artifactId>
+    		<version>3.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>

@@ -1,12 +1,18 @@
 package com.wbh.common.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.Transient;
@@ -67,7 +73,16 @@ public class Professional {
 	@Column(name="verification_code")
 	private String verificationCode;
 	
+	
 	private boolean enabled;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "professional_roles",
+			joinColumns = @JoinColumn(name="professional_id"),
+			inverseJoinColumns = @JoinColumn(name="role_id")	
+			)
+	private Set<Role> roles = new HashSet<>();
 
 	public Professional() {
 	}
@@ -202,7 +217,7 @@ public class Professional {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+		return firstName + " " + lastName;
 	}
 
 	public String getTitle() {
@@ -221,6 +236,19 @@ public class Professional {
 		this.qualification = qualification;
 	}
 	
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+	
+	public void addRole(Role role) {
+		this.roles.add(role);
+	}
+	
+
 	@Transient
 	public String getFullName() {
 		return firstName + " " + lastName;

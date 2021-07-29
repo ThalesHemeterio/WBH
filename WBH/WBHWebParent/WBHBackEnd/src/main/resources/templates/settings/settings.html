@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-	<head th:replace="fragments :: page_head('Edit Settings -  WBH')"/>
-	<link rel="stylesheet" th:href=@{/richtext/richtext.min.css}/>
+	<head th:replace="fragments :: page_head('Edit Settings -  WBH','tag')"/>
+	<link rel="stylesheet" th:href="@{/richtext/richtext.min.css}"/>
 	<script th:src="@{/richtext/jquery.richtext.min.js}"></script>
 </head>
 <body>
@@ -68,5 +68,6 @@
 		});
 </script>
 <script th:src="@{/js/common_forms.js}"></script>
+
 </body>
 </html>

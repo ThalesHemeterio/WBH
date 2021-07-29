@@ -1,12 +1,18 @@
 package com.wbh.common.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.Transient;
@@ -62,6 +68,14 @@ public class Customer {
 	private String verificationCode;
 	
 	private boolean enabled;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "customer_roles",
+			joinColumns = @JoinColumn(name="customer_id"),
+			inverseJoinColumns = @JoinColumn(name="role_id")	
+			)
+	private Set<Role> roles = new HashSet<>();
 
 	public Customer() {
 	}
@@ -209,10 +223,22 @@ public class Customer {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+	
+	public void addRole(Role role) {
+		this.roles.add(role);
+	}
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+		return firstName + " " + lastName;
 	}
 	
 	@Transient
@@ -225,5 +251,7 @@ public class Customer {
 		if(id==null || photos == null) return "/img/default-user.png";
 		return "/customer-photos/"+this.id+"/"+this.photos;
 	}
+	
+	
 	
 }

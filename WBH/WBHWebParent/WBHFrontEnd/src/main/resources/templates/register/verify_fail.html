@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<head th:replace="fragments :: page_head('Verification Failed')" />
+</head>
+<body>
+	<div id="navigation-sticky">
+
+	<div th:replace="navigation2 :: menu"></div>
+
+
+		<div th:replace="navigation2 :: social_menu"></div>
+	
+		<div>&nbsp;</div>
+		<!-- Main Page Heading -->
+		<div class="col-12 text-center mt-5">
+			<h1 class="display-4 pt-4">Verification</h1>
+			<div class="border-top border-dark w-50 mx-auto my-3"></div>
+			<p class="lead">Your account was already verified, or the verification code is invalid. </p>
+
+		</div>
+		<div>&nbsp;</div>
+
+	<div th:replace="navigation2 :: footer"></div>
+
+	<!-- Script Source Files -->
+
+	<!-- End Script Source Files -->
+</body>
+</html>

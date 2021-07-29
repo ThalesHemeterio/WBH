@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:fragment="page_head(title)">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>[[${title}]]</title>
-<link rel="shortcut icon" th:href="@{/img/2618.png}">
-<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
-<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
-<link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap" />
-<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<head th:fragment="page_head(title, remove)" th:remove="${remove}">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>[[${title}]]</title>
+	<link rel="shortcut icon" th:href="@{/img/2618.png}">
+	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap" />
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
 <body>
 	<th th:fragment="column_link(fieldName, collumnLabel, removeTag)" th:remove="${removeTag}">
@@ -32,7 +33,18 @@
 			[[${collumnLabel}]] </a> <span th:if="${sortField == fieldName}"
 		th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}">
 	</span></th>
-
+	
+		<th th:fragment="column_link4(fieldName, collumnLabel, removeTag)" th:remove="${removeTag}">
+		<a class="text-dark" th:href="@{'/sessions/page/' +${currentPage} + '?sortField='+ ${fieldName} +'&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">
+			[[${collumnLabel}]] </a> <span th:if="${sortField == fieldName}"
+		th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}">
+	</span></th>
+	
+		<th th:fragment="column_link5(fieldName, collumnLabel, removeTag)" th:remove="${removeTag}">
+		<a class="text-dark" th:href="@{'/reviews/page/' +${currentPage} + '?sortField='+ ${fieldName} +'&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">
+			[[${collumnLabel}]] </a> <span th:if="${sortField == fieldName}"
+		th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}">
+	</span></th>
 	<a th:fragment="page_link(pageNum, label)" class="page-link"
 		th:href="@{'/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
 
@@ -41,7 +53,13 @@
 
 	<a th:fragment="page_link3(pageNum, label)" class="page-link"
 		th:href="@{'/customers/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
+	
+	<a th:fragment="page_link4(pageNum, label)" class="page-link"
+		th:href="@{'/sessions/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
 		
+		<a th:fragment="page_link5(pageNum, label)" class="page-link"
+		th:href="@{'/reviews/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
+			
 	<div th:fragment="category_status" th:remove="tag">
 		<a th:if="${category.enabled == true}" class="fas fa-check-circle icon-green fa-2x" 
 			th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"

@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
+import com.wbh.admin.setting.SettingRepository;
 import com.wbh.common.entity.Setting;
 import com.wbh.common.entity.SettingCategory;
 
