@@ -68,14 +68,6 @@ public class Customer {
 	private String verificationCode;
 	
 	private boolean enabled;
-	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-			name = "customer_roles",
-			joinColumns = @JoinColumn(name="customer_id"),
-			inverseJoinColumns = @JoinColumn(name="role_id")	
-			)
-	private Set<Role> roles = new HashSet<>();
 
 	public Customer() {
 	}
@@ -224,17 +216,6 @@ public class Customer {
 		this.enabled = enabled;
 	}
 	
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
-	
-	public void addRole(Role role) {
-		this.roles.add(role);
-	}
 
 	@Override
 	public String toString() {

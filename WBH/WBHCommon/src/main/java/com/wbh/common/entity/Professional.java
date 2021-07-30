@@ -76,13 +76,6 @@ public class Professional {
 	
 	private boolean enabled;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-			name = "professional_roles",
-			joinColumns = @JoinColumn(name="professional_id"),
-			inverseJoinColumns = @JoinColumn(name="role_id")	
-			)
-	private Set<Role> roles = new HashSet<>();
 
 	public Professional() {
 	}
@@ -234,18 +227,6 @@ public class Professional {
 
 	public void setQualification(String qualification) {
 		this.qualification = qualification;
-	}
-	
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
-	
-	public void addRole(Role role) {
-		this.roles.add(role);
 	}
 	
 

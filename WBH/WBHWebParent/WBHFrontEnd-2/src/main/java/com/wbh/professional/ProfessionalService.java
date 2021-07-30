@@ -8,11 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.wbh.common.entity.Customer;
 import com.wbh.common.entity.Professional;
-import com.wbh.common.entity.User;
-
-import net.bytebuddy.utility.RandomString;
 
 @Service
 @Transactional
@@ -23,12 +19,12 @@ public class ProfessionalService {
 	@Autowired private PasswordEncoder passwordEncoder;
 	
 	public boolean isEmailUnique(String email) {
-		Professional professional = professionalRepo.getUserByEmail(email);
+		Professional professional = professionalRepo.findByEmail(email);
 		return professional ==null;
 	}
 	
 	public Professional getByEmail(String email) {
-		return professionalRepo.getUserByEmail(email);
+		return professionalRepo.findByEmail(email);
 	}
 	
 	

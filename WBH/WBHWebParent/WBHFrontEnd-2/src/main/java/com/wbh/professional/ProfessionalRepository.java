@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 
 import com.wbh.common.entity.Professional;
 
-
+@Repository
 public interface ProfessionalRepository extends PagingAndSortingRepository<Professional, Integer> {
 	
-	@Query("SELECT p FROM Professional p WHERE p.email = :email")
-	public Professional getUserByEmail(@Param("email") String email);
+	@Query("SELECT p FROM Professional p WHERE p.email = ?1")
+	public Professional findByEmail(String email);
 	
 	@Query("UPDATE Professional p SET p.enabled = true WHERE p.id =?1")
 	@Modifying

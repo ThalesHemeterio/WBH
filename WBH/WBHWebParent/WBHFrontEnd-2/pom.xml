@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>WBHFrontEnd-2</artifactId>
 	<name>WBHFrontEnd-2</name>
-	<description>Parent spring Web Project</description>
+	<description>FrontEnd professionals Project</description>
 	<properties>
 		<java.version>16</java.version>
 	</properties>
