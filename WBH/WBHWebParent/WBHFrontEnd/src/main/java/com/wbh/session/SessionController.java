@@ -19,8 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.wbh.FileUploadUtil;
 import com.wbh.category.CategoryService;
 import com.wbh.common.entity.Category;
-import com.wbh.common.entity.Customer;
-import com.wbh.common.entity.Professional;
 import com.wbh.common.entity.Session;
 import com.wbh.customer.CustomerService;
 import com.wbh.professional.ProfessionalNotFoundException;
@@ -69,76 +67,7 @@ public class SessionController {
 		
 		return "search";
 	}
-	/*
-	@GetMapping("/sessions/new")
-	public String newSession(Model model) {
-		Session session = new Session();
-		session.setEnabled(false);
-		List<Professional> listProfessionals = serviceP.listAll();
-		List<Customer> listCustomers = serviceC.listAll();
-		List<Category> listCategories = serviceCat.listAll();
-		model.addAttribute("session",session);
-		model.addAttribute("listProfessionals",listProfessionals);
-		model.addAttribute("listCustomers",listCustomers);
-		model.addAttribute("listCategories",listCategories);
-		model.addAttribute("pageTitle", "Create new Session");
-		return "sessions/session_form";
-	}
-	
-	@PostMapping("/sessions/save")
-	public String saveSession(Session session, RedirectAttributes redirectAttributes) {
-		System.out.println(session);
-		service.save(session);
-	
-		redirectAttributes.addFlashAttribute("message", "The Session has been saved successfully.");	
-		return getRedirectURLtoAffectedSession(session);
-	}
 
-	private String getRedirectURLtoAffectedSession(Session session) {
-		String name = session.getName();
-		return "redirect:/sessions/page/1?sortField=id&sortDir=asc&keyword="+ name;
-	}
-	
-	@GetMapping("/session/edit/{id}")
-	public String editSession(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
-		try {
-			Session session = service.get(id);
-			List<Professional> listProfessionals = serviceP.listAll();
-			List<Customer> listCustomers = serviceC.listAll();
-			List<Category> listCategories = serviceCat.listAll();
-			model.addAttribute("listProfessionals",listProfessionals);
-			model.addAttribute("listCustomers",listCustomers);
-			model.addAttribute("listCategories",listCategories);
-			
-			model.addAttribute("session", session);
-			model.addAttribute("pageTitle", "Edit Session (ID: "+ id+")");
-			return "sessions/session_form";
-		} catch(SessionNotFoundException ex){
-			redirectAttributes.addFlashAttribute("message", ex.getMessage());
-		}
-		return "redirect:/sessions";
-	}
-	
-	@GetMapping("/session/delete/{id}")
-	public String deleteSession(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
-		try {
-			service.delete(id);
-			redirectAttributes.addFlashAttribute("message", "The session "+ id + " has been deleted successfully");
-		} catch(SessionNotFoundException ex){
-			redirectAttributes.addFlashAttribute("message", ex.getMessage());
-		}
-		return "redirect:/sessions";
-	}
-	
-	@GetMapping("/sessions/{id}/enabled/{status}")
-	public String updateSessionEnabledStatus(@PathVariable(name="id") Integer id, @PathVariable(name="status") boolean enabled, RedirectAttributes redirectAttributes) {
-		service.updateSessionEnabledStatus(id, enabled);
-		String status = enabled ?"enabled" :"disabled";
-		String message ="The Session Id " + id + " has been " + status;
-		redirectAttributes.addFlashAttribute("message", message);
-		return "redirect:/sessions";
-	}
-	*/
 }
 
 

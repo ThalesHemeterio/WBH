@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Configuration
-@Order(1)
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
@@ -46,22 +45,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
-			.antMatchers("/users/**").hasAuthority("Admin")
-			.antMatchers("/customers/**").hasAuthority("Admin")
-			.antMatchers("/categories/**").hasAuthority("Admin")
-			.antMatchers("/sessions/**").hasAuthority("Admin")
-			.antMatchers("/professionals/**").hasAuthority("Admin")
-			.antMatchers("/reviews/**").hasAuthority("Admin")
-			.anyRequest().authenticated()
+			.antMatchers("/customers/**").hasAuthority("Client")
+			.antMatchers("/professionals/**").hasAuthority("Professional")
+			.antMatchers("/admin/**").hasAuthority("Admin")
+			.antMatchers("/register/**").permitAll()
+			.antMatchers("/").permitAll()
+			.antMatchers("/error").permitAll()
 			.and()
 			.formLogin()
 				.loginPage("/login")
-				.defaultSuccessUrl("/", true)
+				.loginProcessingUrl("/login")
+				.defaultSuccessUrl("/indexLogged", true)
 				.usernameParameter("email")
 				.permitAll()
-				.and().logout().permitAll()
-				.and()
-					.rememberMe()
+			.and()
+			.logout().permitAll()
+			.and()
+			.rememberMe()
 					.key("AbcDefgHijKlmOpqrs_1234567890")
 					.tokenValiditySeconds(7*24*60*60); //cookies valid for 1 week
 		}

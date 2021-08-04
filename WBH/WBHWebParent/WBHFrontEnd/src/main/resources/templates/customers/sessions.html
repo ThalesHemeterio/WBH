@@ -3,8 +3,8 @@
 	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:replace="fragments :: page_head('Sessions -  WBH','none')" />
 <body>
-	<div th:replace="navigation2 :: menu_auth"></div>
-	<div th:replace="navigation2 :: social_menu"></div>
+	<div th:replace="navigationC :: menu"></div>
+	<div th:replace="navigationC :: social_menu"></div>
 
 	<!-- Content -->
 
@@ -143,7 +143,7 @@
 	
 	<!-- End of the content -->
 
-	<div th:replace="navigation :: footer"></div>
+	<div th:replace="navigationC :: footer"></div>
 
 	<script type="text/javascript">
 		$(document).ready(function() {

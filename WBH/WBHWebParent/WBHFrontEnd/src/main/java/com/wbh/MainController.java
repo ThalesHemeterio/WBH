@@ -23,8 +23,4 @@ public class MainController {
 		return "index";
 	}
 
-	@GetMapping("/customers/index")   // handle HHTP requests
-	public String viewIndex() {
-		return "customers/index";
-	}
 }

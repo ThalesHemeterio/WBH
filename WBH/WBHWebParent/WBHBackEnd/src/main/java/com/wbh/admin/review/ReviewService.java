@@ -14,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.wbh.admin.professional.ProfessionalNotFoundException;
-import com.wbh.common.entity.Professional;
 import com.wbh.common.entity.Review;
 import com.wbh.common.entity.Session;
 

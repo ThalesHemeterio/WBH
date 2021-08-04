@@ -14,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.wbh.admin.professional.ProfessionalNotFoundException;
-import com.wbh.common.entity.Professional;
 import com.wbh.common.entity.Session;
 
 @Service
@@ -39,6 +38,7 @@ public class SessionService {
 			}
 			return repo.findAll(pageable);
 		}
+		
 		
 		public Session save(Session session) {
 			session.setCreatedTime(new Date());
@@ -65,4 +65,6 @@ public class SessionService {
 				throw new SessionNotFoundException("Could not find any session with ID: "+ id);
 			}
 		}
+
+
 }

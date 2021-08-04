@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.wbh.admin.FileUploadUtil;
+import com.wbh.admin.user.RoleRepository;
 import com.wbh.admin.user.UserNotFoundException;
 import com.wbh.admin.user.UserService;
 import com.wbh.common.entity.Role;
@@ -28,19 +29,21 @@ public class UserController {
 		@Autowired
 		private UserService service;
 		
-		@GetMapping("/users")
+		@Autowired
+		private RoleRepository roleRepo;
+		
+		@GetMapping("/admin/users")
 		public String listfirstPage(Model model) {
 			return listByPage(1,model, "firstName", "asc",null);
 		}
 		
-		@GetMapping("/users/page/{pageNum}")
+		@GetMapping("/admin/users/page/{pageNum}")
 		public String listByPage(
 					@PathVariable(name="pageNum") int pageNum, Model model, 
 					@Param("sortField") String sortField, @Param("sortDir") String sortDir,
 					@Param("keyword") String keyword) {
 			Page<User> page = service.listByPage(pageNum, sortField, sortDir,keyword);
 			List<User> listUsers = page.getContent();
-			
 			long startCount =(pageNum-1)*UserService.USERS_PER_PAGE+1;
 			long endCount = startCount+UserService.USERS_PER_PAGE-1;
 			if(endCount >page.getTotalElements()) {
@@ -61,10 +64,10 @@ public class UserController {
 			model.addAttribute("reverseSortDir",reverseSortDir);
 			model.addAttribute("keyword", keyword);
 			
-			return "users/users";
+			return "admin/users/users";
 		}
 		
-		@GetMapping("/users/new")
+		@GetMapping("/admin/users/new")
 		public String newUser(Model model) {
 			List<Role> listRoles = service.listRoles();
 			User user = new User();
@@ -72,10 +75,10 @@ public class UserController {
 			model.addAttribute("user",user);
 			model.addAttribute("listRoles",listRoles);
 			model.addAttribute("pageTitle", "Create new User");
-			return "users/user_form";
+			return "admin/users/user_form";
 		}
 		
-		@PostMapping("/users/save")
+		@PostMapping("/admin/users/save")
 		public String saveUser(User user, RedirectAttributes redirectAttributes, 
 				@RequestParam("image") MultipartFile multipartFile ) throws IOException {
 			System.out.println(user);
@@ -96,10 +99,10 @@ public class UserController {
 
 		private String getRedirectURLtoAffectedUser(User user) {
 			String firstPartOfEmail = user.getEmail().split("@")[0];
-			return "redirect:/users/page/1?sortField=id&sortDir=asc&keyword="+ firstPartOfEmail;
+			return "redirect:/admin/users/page/1?sortField=id&sortDir=asc&keyword="+ firstPartOfEmail;
 		}
 		
-		@GetMapping("/user/edit/{id}")
+		@GetMapping("/admin/user/edit/{id}")
 		public String editUser(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 			try {
 				User user = service.get(id);
@@ -107,14 +110,14 @@ public class UserController {
 				model.addAttribute("user", user);
 				model.addAttribute("pageTitle", "Edit User (ID: "+ id+")");
 				model.addAttribute("listRoles",listRoles);
-				return "users/user_form";
+				return "admin/users/user_form";
 			} catch(UserNotFoundException ex){
 				redirectAttributes.addFlashAttribute("message", ex.getMessage());
 			}
-			return "redirect:/users";
+			return "redirect:/admin/users";
 		}
 		
-		@GetMapping("/user/delete/{id}")
+		@GetMapping("/admin/user/delete/{id}")
 		public String deleteUser(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 			try {
 				service.delete(id);
@@ -122,16 +125,16 @@ public class UserController {
 			} catch(UserNotFoundException ex){
 				redirectAttributes.addFlashAttribute("message", ex.getMessage());
 			}
-			return "redirect:/users";
+			return "redirect:/admin/users";
 		}
 		
-		@GetMapping("/users/{id}/enabled/{status}")
+		@GetMapping("/admin/users/{id}/enabled/{status}")
 		public String updateUserEnabledStatus(@PathVariable(name="id") Integer id, @PathVariable(name="status") boolean enabled, RedirectAttributes redirectAttributes) {
 			service.updateUserEnabledStatus(id, enabled);
 			String status = enabled ?"enabled" :"disabled";
 			String message ="The user Id " + id + " has been " + status;
 			redirectAttributes.addFlashAttribute("message", message);
-			return "redirect:/users";
+			return "redirect:/admin/users";
 		}
 		
 }

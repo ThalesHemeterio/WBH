@@ -16,6 +16,7 @@ public interface SessionRepository extends PagingAndSortingRepository<Session, I
 			+ "OR s.description LIKE %?1%")
 	public Page<Session> findAll(String keyword, Pageable pageable);
 	
+	
 	public Long countById(Integer id);  // method use to delete users
 	
 	@Query("UPDATE Session s SET s.enabled =?2 WHERE s.id = ?1")

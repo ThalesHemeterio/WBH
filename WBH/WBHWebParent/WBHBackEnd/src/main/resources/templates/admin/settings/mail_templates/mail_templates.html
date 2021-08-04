@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content" th:remove="tag">
+	<form th:action="@{/admin/settings/save_mail_templates}" method="post">
+		<div>
+			<!-- Nav tabs -->
+			<ul class="nav nav-tabs" id="mailTemplatesTab" role="tablist">
+				<li class="nav-item"><a class="nav-link active"
+					data-toggle="tab" href="#userVerification" role="tab">User
+						verification</a></li>
+				<li class="nav-item"><a class="nav-link" data-toggle="tab"
+					href="#sessionConfirmation" role="tab">Session Confirmation</a></li>
+			</ul>
+
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div class="tab-pane active p-3" id="userVerification"
+					role="tabpanel">
+					<div
+						th:replace="/admin/settings/mail_templates/user_verification :: content"></div>
+				</div>
+				<div class="tab-pane p-3" id="sessionConfirmation" role="tabpanel">
+					<h2>Session Confirmation Email Template</h2>
+				</div>
+			</div>
+		</div>
+		<div class="text-center">
+			<input type="submit" value="Save"
+				class="btn btn-primary btn-outline-dark btn-lg" />
+		</div>
+	</form>
+</div>
+
+</body>
+</html>

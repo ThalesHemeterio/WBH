@@ -35,17 +35,17 @@ public class Review {
 		
 		@ManyToOne
 		@JoinColumn(name="professional_id")	
-		private Professional professional;
+		private User professional;
 
 		@ManyToOne
 		@JoinColumn(name="customer_id")	
-		private Customer customer;
+		private User customer;
 		
 		@ManyToOne
 		@JoinColumn(name="adm_id")	
 		private User user;
 	
-		public Review(String text, String title, Integer rate, Professional professional, Customer customer,
+		public Review(String text, String title, Integer rate, User professional, User customer,
 				User user) {
 			super();
 			this.text = text;
@@ -107,19 +107,19 @@ public class Review {
 			this.enabled = enabled;
 		}
 
-		public Professional getProfessional() {
+		public User getProfessional() {
 			return professional;
 		}
 
-		public void setProfessional(Professional professional) {
+		public void setProfessional(User professional) {
 			this.professional = professional;
 		}
 
-		public Customer getCustomer() {
+		public User getCustomer() {
 			return customer;
 		}
 
-		public void setCustomer(Customer customer) {
+		public void setCustomer(User customer) {
 			this.customer = customer;
 		}
 

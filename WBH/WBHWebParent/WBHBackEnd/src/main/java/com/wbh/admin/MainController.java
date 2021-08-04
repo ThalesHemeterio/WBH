@@ -6,22 +6,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
 
-	@GetMapping("")   // handle HHTP requests
+	@GetMapping("/index")   // handle HHTP requests
 	public String viewHomePage() {
 		return "index";
 	}
 	
-	@GetMapping("/index")   // handle HHTP requests
+	@GetMapping("/indexLogged")   // handle HHTP requests
+	public String viewIndexLoggedUser() {
+		return "indexLogged";
+	}
+	
+	@GetMapping("/admin/")   // handle HHTP requests
+	public String viewHomePageAdm() {
+		return "admin/index";
+	}
+	
+	@GetMapping("/admin/index")   // handle HHTP requests
 	public String viewHome() {
-		return "index";
+		return "admin/index";
 	}
 	
 	@GetMapping("/login")   // handle HHTP requests
 	public String viewLogin() {
 		return "login";
 	}
-	
-	
-	
 	
 }

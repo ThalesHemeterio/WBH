@@ -27,7 +27,7 @@ public class SettingController {
 		
 		@Autowired private CurrencyRepository currencyRepo;
 		
-		@GetMapping("/settings")
+		@GetMapping("/admin/settings")
 		public String listAll(Model model) {
 			List<Setting> listSettings = service.listAllSettings();
 			List<Currency> listCurrencies = currencyRepo.findAllByOrderByNameAsc();
@@ -39,10 +39,10 @@ public class SettingController {
 				model.addAttribute(setting.getKey(), setting.getValue());
 			}
 					
-			return"settings/settings";
+			return"admin/settings/settings";
 		}
 		
-		@PostMapping("/settings/save_general")
+		@PostMapping("/admin/settings/save_general")
 		public String saveGeneralSettings(@RequestParam("fileImage") MultipartFile multipartFile,
 				HttpServletRequest request, RedirectAttributes ra ) throws IOException {
 			GeneralSettingBag settingBag = service.getGenaralSettings();
@@ -54,7 +54,7 @@ public class SettingController {
 			
 				ra.addFlashAttribute("message","General Settings have been saved.");
 
-			return"redirect:/settings";
+			return"redirect:/admin/settings";
 		}
 
 		private void saveSiteLogo(MultipartFile multipartFile, GeneralSettingBag settingBag) throws IOException {
@@ -88,7 +88,7 @@ public class SettingController {
 			service.saveAll(listSettings);
 		}
 		
-		@PostMapping("/settings/save_mail_server")
+		@PostMapping("/admin/settings/save_mail_server")
 			public String saveMailServerSettings(HttpServletRequest request, RedirectAttributes ra ){
 				List<Setting> mailServerSettings = service.getMailServerSettings();
 				
@@ -96,10 +96,10 @@ public class SettingController {
 				
 					ra.addFlashAttribute("message","Mail Server Settings have been saved.");
 
-				return"redirect:/settings";
+				return"redirect:/admin/settings";
 		}
 		
-		@PostMapping("/settings/save_mail_templates")
+		@PostMapping("/admin/settings/save_mail_templates")
 		public String saveMailTemplateSettings(HttpServletRequest request, RedirectAttributes ra ){
 			List<Setting> mailTemplateSettings = service.getMailTemplateSettings();
 			
@@ -107,6 +107,6 @@ public class SettingController {
 			
 				ra.addFlashAttribute("message","Mail Template Settings have been saved.");
 
-			return"redirect:/settings";
+			return"redirect:/admin/settings";
 	}
 }

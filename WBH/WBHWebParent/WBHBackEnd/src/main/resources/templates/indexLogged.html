@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="fragmentsAdmin :: page_head('Home -  WBH','none')" />
+<body>
+	<div th:replace="navigation2 :: menu"></div>
+
+	<div th:replace="navigation2 :: social_menu"></div>
+
+	<!-- Content -->
+		<h2> WHB Control Panel</h2>
+		 Welcome 
+		 <a th:href="@{/admin/account}" sec:authentication="principal.fullname"></a>
+		 <span sec:authentication="principal.authorities"></span>
+	 
+	<!-- End of Content -->
+
+	<div th:replace="navigation2 :: footer"></div>
+
+	<script type="text/javascript">
+
+	</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.wbh.admin.professional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -13,8 +14,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.wbh.common.entity.Customer;
-import com.wbh.common.entity.Professional;
+import com.wbh.common.entity.User;
+
+import net.bytebuddy.utility.RandomString;
 
 @Service
 @Transactional
@@ -28,15 +30,15 @@ public class ProfessionalService {
 	@Autowired 
 	private PasswordEncoder passwordEncoder;
 	
-	public Professional getByEmail(String email) {
+	public User getByEmail(String email) {
 		return professionalRepo.getProfessionalByEmail(email);
 	}
 	
-	public List<Professional> listAll(){
-		return (List<Professional>) professionalRepo.findAll();
+	public List<User> listAll(){
+		return (List<User>) professionalRepo.findAll();
 	}
 	
-	public Page<Professional> listByPage(int pageNum, String sortField, String sortDir, String keyword){
+	public Page<User> listByPage(int pageNum, String sortField, String sortDir, String keyword){
 		Sort sort = Sort.by(sortField);	
 		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
 		
@@ -49,11 +51,11 @@ public class ProfessionalService {
 	}
 	
 
-	public Professional save(Professional professional) {
+	public User save(User professional) {
 		boolean isUpdatingProfessional = (professional.getId()!=null);								
 		
 		if(isUpdatingProfessional) {														// checking if you're are editing or creating a user if the same email.
-			Professional existingProfessional = professionalRepo.findById(professional.getId()).get();
+			User existingProfessional = professionalRepo.findById(professional.getId()).get();
 			
 			if(professional.getPassword().isEmpty()) {                                      // password is not required in changing you can keep the same just not fill the field
 				professional.setPassword(existingProfessional.getPassword());                
@@ -66,14 +68,14 @@ public class ProfessionalService {
 		return professionalRepo.save(professional);
 	}
 	
-	public void encodePassword(Professional professional) {											// Function responsible for encoding the password 		
+	public void encodePassword(User professional) {											// Function responsible for encoding the password 		
 		String encodedPassowrd = passwordEncoder.encode(professional.getPassword());
 		professional.setPassword(encodedPassowrd);
 		
 	}
 	
 	public boolean isEmailUnique(Integer id, String email) {
-		Professional professionalByEmail = professionalRepo.getProfessionalByEmail(email);
+		User professionalByEmail = professionalRepo.getProfessionalByEmail(email);
 		
 		if(professionalByEmail == null) return true;
 		
@@ -89,7 +91,7 @@ public class ProfessionalService {
 		return true;
 	}
 
-	public Professional get(Integer id) throws ProfessionalNotFoundException {
+	public User get(Integer id) throws ProfessionalNotFoundException {
 		try {
 			return professionalRepo.findById(id).get();
 		} catch (NoSuchElementException ex) {
@@ -106,8 +108,8 @@ public class ProfessionalService {
 		professionalRepo.deleteById(id);
 	}
 	
-	public Professional updateAccount(Professional professionalInForm) {     // updates an account of a logged user
-		Professional professionalInDB = professionalRepo.findById(professionalInForm.getId()).get();
+	public User updateAccount(User professionalInForm) {     // updates an account of a logged user
+		User professionalInDB = professionalRepo.findById(professionalInForm.getId()).get();
 		
 		if(!professionalInForm.getPassword().isEmpty()) {
 			professionalInDB.setPassword(professionalInForm.getPassword());
@@ -125,5 +127,26 @@ public class ProfessionalService {
 	
 	public void updateProfessionalEnabledStatus(Integer id, boolean enabled) {   // function to update enabled/disabled status of the user
 		professionalRepo.updateEnableStatus(id, enabled);
+	}
+	
+	public void registerProfessional(User professional) {
+		encodePassword(professional);
+		professional.setEnabled(false);
+		professional.setCreatedTime(new Date());
+		
+		String randomCode = RandomString.make(64);
+		professional.setVerificationCode(randomCode);
+		
+		professionalRepo.save(professional);
+	}
+	
+	public boolean verify(String verificationCode) {
+		User professional = professionalRepo.findByVerificationCode(verificationCode);
+		if(professional == null || professional.isEnabled()) {
+			return false;
+		}else {
+			professionalRepo.verify(professional.getId());
+			return true;
+		}
 	}
 }

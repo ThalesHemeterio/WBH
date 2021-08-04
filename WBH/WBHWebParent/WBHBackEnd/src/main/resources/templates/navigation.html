@@ -2,14 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
 	<div th:fragment="menu">
-		<div id="navigation-sticky">
-
 			<!-- Navigation -->
-			<form th:action="@{/logout}" method="post" th:hidden="true"
-				name="logoutForm">
-				<input type="submit" />
-			</form>
-			<nav class="navbar bg-light navbar-light navbar-expand-lg sticky-top">
+			<nav class="navbar sticky-top bg-light navbar-light navbar-expand-lg justify-content-center">
 				<div class="container">
 					<!-- Logo -->
 					<a th:href="@{/index}" class="navbar-brand"><img
@@ -22,26 +16,19 @@
 
 					<div class="collapse navbar-collapse" id="navbarResponsive">
 						<ul class="navbar-nav ml-auto">
-							<li class="nav-item" sec:authorize="hasAuthority('Admin')"><a th:href="@{/users}" class="nav-link">Users</a></li>
-							<li class="nav-item" sec:authorize="hasAuthority('Admin')"><a th:href="@{/categories}" class="nav-link">Categories</a></li>
-							<li class="nav-item"><a th:href="@{/professionals}" class="nav-link">Professionals</a></li>
-							<li class="nav-item" sec:authorize="hasAuthority('Admin')"><a th:href="@{/customers}" class="nav-link">Clients</a></li>
-							<li class="nav-item" sec:authorize="hasAuthority('Admin')"><a th:href="@{/sessions}" class="nav-link">Sessions</a></li>
-							<li class="nav-item"><a th:href="@{/reviews}" class="nav-link">Reviews</a></li>
-							<li class="nav-item" sec:authorize="hasAuthority('Admin')"><a th:href="@{/settings}" class="nav-link">Settings</a></li>
-							<li class="nav-item"><a href="" id="logoutLink"
-								class="nav-link">Logout</a></li>
-							<li><span class=" nav-item nav-link fas fa-user"></span></li>
-							<li class="nav-item"><a class="nav-link"
-							th:href="@{/account}"
-								sec:authentication="principal.fullname"></a></li>
-							<li>
+							<li class="nav-item"><a th:href="@{/index}" class="nav-link">Home</a></li>
+							<li class="nav-item"><a th:href="@{/register/register_professional}" class="nav-link">Professionals</a></li>
+							<li class="nav-item"><a th:href="@{/register/register_customer}" class="nav-link">Clients</a></li>
+							<li class="nav-item"><a th:href="@{/search}" class="nav-link">Search</a></li>
+							<li class="nav-item"><a th:href="@{/login}" class="nav-link">Login</a></li>
+							
 						</ul>
 					</div>
 				</div>
 			</nav>
 		</div>
-	</div>
+		
+
 	<div th:fragment="social_menu">
 		<div id="social-media-sticky">
 			<div class="jumbotron sticky-top">

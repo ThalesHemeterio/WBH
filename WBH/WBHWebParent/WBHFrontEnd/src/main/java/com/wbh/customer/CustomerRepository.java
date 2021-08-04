@@ -5,21 +5,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import com.wbh.common.entity.Customer;
 import com.wbh.common.entity.User;
 
-public interface CustomerRepository extends CrudRepository<Customer, Integer> {
+public interface CustomerRepository extends CrudRepository<User, Integer> {
 	
-	@Query("SELECT c from Customer c WHERE c.email =?1")
-	public Customer findByEmail(String email);
+	@Query("SELECT u from User u WHERE u.email =?1")
+	public User findByEmail(String email);
 	
-	@Query("SELECT c FROM Customer c WHERE c.email = :email")
-	public Customer getUserByEmail(@Param("email") String email);
+	@Query("SELECT u FROM User u WHERE u.email = :email")
+	public User getUserByEmail(@Param("email") String email);
 	
-	@Query("SELECT c from Customer c WHERE c.verificationCode =?1")
-	public Customer findByVerificationCode(String code);
+	@Query("SELECT u from User u WHERE u.verificationCode =?1")
+	public User findByVerificationCode(String code);
 	
-	@Query("UPDATE Customer c SET c.enabled = true, c.verificationCode = null WHERE c.id =?1")
+	@Query("UPDATE User u SET u.enabled = true, u.verificationCode = null WHERE u.id =?1")
 	@Modifying
 	public void enable(Integer id);
 

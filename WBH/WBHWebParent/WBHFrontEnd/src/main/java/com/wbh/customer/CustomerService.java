@@ -1,6 +1,7 @@
 package com.wbh.customer;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -8,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.wbh.common.entity.Customer;
+import com.wbh.common.entity.User;
 
 import net.bytebuddy.utility.RandomString;
 
@@ -20,12 +21,16 @@ public class CustomerService {
 	@Autowired private CustomerRepository customerRepo;
 	@Autowired private PasswordEncoder passwordEncoder;
 	
+	public List<User> listAll(){
+		return (List<User>) customerRepo.findAll();
+	}
+	
 	public boolean isEmailUnique(String email) {
-		Customer customer = customerRepo.findByEmail(email);
+		User customer = customerRepo.findByEmail(email);
 		return customer ==null;
 	}
 	
-	public void registerCustomer(Customer customer) {
+	public void registerCustomer(User customer) {
 		encodePassword(customer);
 		customer.setEnabled(false);
 		customer.setCreatedTime(new Date());
@@ -36,13 +41,13 @@ public class CustomerService {
 		customerRepo.save(customer);
 	}
 
-	private void encodePassword(Customer customer) {
+	private void encodePassword(User customer) {
 		String encodedPassword = passwordEncoder.encode(customer.getPassword());
 		customer.setPassword(encodedPassword);
 	}
 	
 	public boolean verify(String verificationCode) {
-		Customer customer = customerRepo.findByVerificationCode(verificationCode);
+		User customer = customerRepo.findByVerificationCode(verificationCode);
 		if(customer == null || customer.isEnabled()) {
 			return false;
 		}else {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.wbh.common.entity.Setting;
 import com.wbh.common.entity.SettingCategory;
+import com.wbh.admin.setting.EmailSettingBag;
 
 @Service
 public class SettingService {
@@ -41,4 +42,10 @@ public class SettingService {
 		return repo.findByCategory(SettingCategory.MAIL_TEMPLATES);
 	}
 	
+	public EmailSettingBag getEmailSettings() {
+		List<Setting> settings = repo.findByCategory(SettingCategory.MAIL_SERVER);
+		settings.addAll(repo.findByCategory(SettingCategory.MAIL_TEMPLATES));
+		
+		return new EmailSettingBag(settings);
+	}
 }

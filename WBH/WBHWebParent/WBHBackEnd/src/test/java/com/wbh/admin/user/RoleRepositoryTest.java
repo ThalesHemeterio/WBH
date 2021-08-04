@@ -45,4 +45,10 @@ public class RoleRepositoryTest {
 		repo.save(roleAss);
 		}
 	*/
+	
+	@Test
+	public void testgetRoles() {
+		Role rolProf = repo.getRoleById(3);
+		System.out.println(rolProf);
+		}
 }

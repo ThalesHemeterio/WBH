@@ -1,39 +1,45 @@
 package com.wbh.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import com.wbh.common.entity.Customer;
+import java.util.List;
+import java.util.Set;
+
+import com.wbh.common.entity.Role;
 import com.wbh.common.entity.User;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomerUserDetails implements UserDetails{
 
-	//private Customer customer;
 	
-	// public CustomerUserDetails(Customer customer) {
-	//	 this.customer = customer;
-	// }
-	
-	private User customer;
+	private User user;
 	
 	 public CustomerUserDetails(User customer) {
-		 this.customer = customer;
+		 this.user = customer;
 	 }
 	
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
-	}
+		@Override
+		public Collection<? extends GrantedAuthority> getAuthorities() {
+			Set<Role> roles = user.getRoles();
+			List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+			
+			for(Role role : roles) {
+				authorities.add(new SimpleGrantedAuthority(role.getName()));
+			}
+			return authorities;
+		}
 
 	@Override
 	public String getPassword() {
-		return customer.getPassword();
+		return user.getPassword();
 	}
 
 	@Override
 	public String getUsername() {
-		return customer.getEmail();
+		return user.getEmail();
 	}
 
 	@Override
@@ -53,19 +59,19 @@ public class CustomerUserDetails implements UserDetails{
 
 	@Override
 	public boolean isEnabled() {
-		return customer.isEnabled();
+		return user.isEnabled();
 	}
 	
 	public String getFullName() {
-		return customer.getFirstName() +" "+ customer.getLastName();		
+		return user.getFirstName() +" "+ user.getLastName();		
 	}
 	
 	public void setFirstName(String firstName) {
-		this.customer.setFirstName(firstName);
+		this.user.setFirstName(firstName);
 	}
 	
 	public void setLastName(String lastName) {
-		this.customer.setLastName(lastName);
+		this.user.setLastName(lastName);
 	}
 
 }

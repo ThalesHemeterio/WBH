@@ -2,7 +2,9 @@ package com.wbh.admin.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 
+import com.wbh.admin.session.SessionRepository;
 import com.wbh.common.entity.Role;
+import com.wbh.common.entity.Session;
 import com.wbh.common.entity.User;
 
 @DataJpaTest(showSql =false)
@@ -26,6 +30,8 @@ public class UserRepositoryTest {
 
 	@Autowired
 	private UserRepository repo;
+	
+	@Autowired SessionRepository sessionRepo;
 	
 	@Autowired
 	private TestEntityManager entityManager;
@@ -162,21 +168,62 @@ public class UserRepositoryTest {
 		userThales.setEnabled(true);
 		assertThat(userThales).isNotNull();
 	}
-	*/
+	
 	@Test
 	public void testCreateUser() {
 		Role roleAdmin = entityManager.find(Role.class, 1);
-		User userAmdin = new User("thales@admin.com", "123456", "Thales", "Hemeterio",  "23/03/1992", "083 067 8284", "34,Royston Kimmage");
+		User userAmdin = new User("thales@admin.com", "12345678", "Thales", "Hemeterio",  "23/03/1992", "083 067 8284", "34,Royston Kimmage","D12R5P9", "Dublin","Ireland");
 		userAmdin.addRole(roleAdmin);
 		userAmdin.setEnabled(true);
-		
+		System.out.println(userAmdin);
+		System.out.println(roleAdmin);
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String rawPassword = "123456";
+		String rawPassword = "12345678";
 		String encodedPassword = passwordEncoder.encode(rawPassword);
 		userAmdin.setPassword(encodedPassword);
 		
 		repo.save(userAmdin);
 
 	}
+	
+	@Test
+	public void testCreateUser() {
+		Role roleAdmin = entityManager.find(Role.class, 3);
+		User userAmdin = new User("thales@client.com", "12345678", "Thales", "Hemeterio",  "23/03/1992", "083 067 8284", "34,Royston Kimmage","D12R5P9", "Dublin","Ireland");
+		userAmdin.addRole(roleAdmin);
+		userAmdin.setEnabled(true);
+		System.out.println(userAmdin);
+		System.out.println(roleAdmin);
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String rawPassword = "12345678";
+		String encodedPassword = passwordEncoder.encode(rawPassword);
+		userAmdin.setPassword(encodedPassword);
 		
+		repo.save(userAmdin);
+
+	}
+	
+	@Test
+	public void testEditPassword() {
+		User userThales = repo.findById(8).get();
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String rawPassword = "12345678";
+		String encodedPassword = passwordEncoder.encode(rawPassword);
+		userThales.setPassword(encodedPassword);
+		
+		repo.save(userThales);
+
+	}
+	
+	@Test
+	public void testDate() {
+	Date date = new Date();
+	
+	Session session = new Session();
+	session = sessionRepo.findByName("Acupuncture");
+	System.out.println(session.getDate());
+	System.out.println(date.UTC(0, 0, 0, 0, 0, 0)+"-"+date.getMonth()+"-"+date.getDay());
+	}
+	*/
+	
 }

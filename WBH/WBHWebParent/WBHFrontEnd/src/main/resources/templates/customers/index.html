@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<head th:replace="fragments :: page_head('Home -  WBH',)" />
+<head th:replace="fragments :: page_head('Home -  WBH')" />
 <body>
-	<div th:replace="navigation2 :: menu_auth"></div>
-	<div th:replace="navigation2 :: social_menu"></div>
+	<div th:replace="navigationC :: menu"></div>
+	<div th:replace="navigationC :: social_menu"></div>
 
 	<!-- Content -->
-		<h2> WHB Control Panel</h2>
+		<h2> WHB Control Panel Customer</h2>
 		 Welcome 
-		
 	 
 	<!-- End of Content -->
 
-	<div th:replace="navigation :: footer"></div>
+	<div th:replace="navigationC :: footer"></div>
 
 	<script type="text/javascript">
 

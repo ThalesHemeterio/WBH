@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 @Configuration
-@Order(2)
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
@@ -50,17 +49,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
-				.antMatchers("/customers/**").authenticated()
+				.antMatchers("/customers/**").hasAuthority("Client")
+				.antMatchers("/professionals/**").hasAuthority("Professional")
 				.antMatchers("/register/**").permitAll()
 				.antMatchers("/").permitAll()
 				.antMatchers("/error").permitAll()
 				.and()
 				.formLogin()
 					.loginPage("/login")
-					.defaultSuccessUrl("/customers/login", true)
+					.defaultSuccessUrl("/indexLogged.html", true)
 					.usernameParameter("email")
 					.permitAll()
-					.failureHandler(authenticationFailureHandler())
 				.and()
 				.logout().permitAll()
 				.and()
@@ -70,10 +69,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					;
 		}
 
-	    @Bean
-	    public AuthenticationFailureHandler authenticationFailureHandler() {
-	        return new CustomAuthenticationFailureHandler();
-	    }
 	    
 		@Override
 		public void configure(WebSecurity web) throws Exception {

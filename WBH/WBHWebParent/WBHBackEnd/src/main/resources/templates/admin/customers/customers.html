@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="fragmentsAdmin :: page_head('Clients -  WBH','none')" />
+<body>
+	<div th:replace="navigation2 :: menu"></div>
+
+	<!-- Content -->
+
+	<div class="text-center m-3">
+		<h1 class="text-center m-3"> Manage Clients</h1>
+		<div class="border-top border-dark w-50 mx-auto my-3"></div>
+		<a th:href="@{/admin/customers/new}" title="Add new Client" class="fas fa-user-plus fa-2x text-center m-3 icon-dark"></a>
+	</div>
+	<div th:if="${message != null}" class=" alert alert-success text-center">
+		[[${message}]]
+	</div>
+	
+	<!-- Filter -->
+	<div class="text-center">
+		<form th:action="@{/admin/customers/page/1}" class="form-inline m-3">
+			<input type="hidden" name="sortField" th:value="${sortField}" />
+			<input type="hidden" name="sortDir" th:value="${sortDir}" />
+			Filter:&nbsp;
+			<input type="search"  name="keyword" th:value="${keyword}" class="col-sm-4" required/>
+			&nbsp;&nbsp;
+			<button type="submit" title="Search" class="btn btn-primary">
+				<i class="fas fa-search"></i>
+			</button>
+			&nbsp;&nbsp;
+			<button type="button" title="Clear Search" class="btn btn-secondary" onclick="clearFilter()">
+				<i class="fas fa-eraser"></i>
+			</button>
+		</form>
+	</div>
+	
+	<!-- End of filter -->
+	<div class="full-details">
+		<table class="table table-boarded table-striped table-hover table-responsive-xl mg-1">
+			<thead class="thead-light">
+				<tr>
+					<th class="hideable-column">
+						<th th:replace="fragmentsAdmin :: column_link3('id', 'User ID', 'tag' )"/>
+					</th>
+					<th> Photo</th>
+					<th class="hideable-column">
+						<th th:replace="fragmentsAdmin :: column_link3('email', 'Email', 'tag' )"/>
+					</th>
+					<th th:replace="fragmentsAdmin :: column_link3('firstName', 'First Name', 'none')"/>
+					<th th:replace="fragmentsAdmin :: column_link3('lastName', 'Last Name', 'none')"/>
+					<th> Data of Birth</th>
+					<th> Address</th> 
+					<th> Contact</th>
+					<th th:replace="fragmentsAdmin :: column_link3('enabled', 'Enabled', 'none')"/>
+					<th>Edit/Delete</th>
+				</tr>
+				
+			</thead>
+			<tbody>
+					<tr th:each="customer : ${listCustomers}"
+						th:object="${customer}"
+     					th:if="${customer.FirstRole} == ${roleCustomer}">
+					<td class="hideable-column"> [[${customer.id}]] </td>
+					<td> 
+						<span th:if="${customer.photos==null}" class="fas fa-portrait fa-4x icon-silver"></span>
+						<img th:if="${customer.photos!=null}" th:src="@{${customer.photosImagePath}}"
+						style="width:100px"/>
+					</td>
+					<td class="hideable-column"> [[${customer.email}]] </td>
+					<td> [[${customer.firstName}]] </td>
+					<td> [[${customer.lastName}]] </td>
+					<td> [[${customer.dob}]] </td>
+					<td> [[${customer.addressLine1}]] </td>
+					<td> [[${customer.contact}]] </td>
+					<td> 
+						<a th:if="${customer.enabled == true}" class="fas fa-check-circle icon-green fa-2x" 
+							th:href="@{'/admin/customers/' + ${customer.id} + '/enabled/false'}"
+							title="Disable this user"></a>
+						<a th:if="${customer.enabled != true}" class="far fa-circle icon-red fa-2x " 
+							th:href="@{'/admin/customers/' + ${customer.id} + '/enabled/true'}"
+							title="Enable this user"></a>
+					</td>
+					<td> 
+						<a class="fas fa-edit icon-green fa-2x" th:href="@{'/admin/customer/edit/' +${customer.id}}" title="Edit this client"></a>
+						&nbsp; 
+						<a class="fas fa-trash icon-dark fa-2x link-delete" th:href="@{'/admin/customer/delete/' +${customer.id}}" th:userId="${customer.id}" title="Delete this client"></a>	
+					</td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="less-details">
+		<div th:each="customer : ${listCustomers}" class="row m-1">
+			<div class="col-4">
+			 <span class="fas fa-portrait fa-4x icon-silver"></span>
+			</div>
+			<div class="col-8">
+				<div>[[${customer.fullName}]]</div>
+				<div class="mt-2">
+						<a th:if="${customer.enabled == true}" class="fas fa-check-circle icon-green fa-2x" 
+							th:href="@{'/admin/customers/' + ${customer.id} + '/enabled/false'}"
+							title="Disable this client"></a>
+						<a th:if="${customer.enabled != true}" class="far fa-circle icon-red fa-2x " 
+							th:href="@{'/admin/customers/' + ${customer.id} + '/enabled/true'}"
+							title="Enable this client"></a>
+						&nbsp;
+						<a class="fas fa-edit icon-green fa-2x" th:href="@{'/admin/customer/edit/' +${customer.id}}" title="Edit this customer"></a>
+						&nbsp; 
+						<a class="fas fa-trash icon-dark fa-2x link-delete" th:href="@{'/admin/customer/delete/' +${customer.id}}" th:userId="${customer.id}" title="Delete this customer"></a>
+				</div>
+			</div>
+			<div>&nbsp;</div>
+		</div>
+	</div>
+	
+	
+	<!-- Pagination -->
+	<div class="text-center m-1"  th:if="${totalItems >0}">
+		<span> Showing users [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+	</div>
+	<div class="text-center m-1"  th:unless="${totalItems >0}">
+		<span> No Users Found</span>
+	</div>
+	<div th:if="${totalPages > 1}">
+	<nav>
+  		<ul class="pagination justify-content-center flex-wrap">
+		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link3(1, 'First')"></a>
+		    </li>
+		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link3(${currentPage-1}, 'Previous')"></a>
+		    </li>
+		    
+		    <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" 
+		    	th:each="i : ${#numbers.sequence(1,totalPages)}">
+		    	<a th:replace="fragmentsAdmin :: page_link3(${i}, ${i})"></a>
+		    </li>
+		    
+		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link3(${currentPage+1}, 'Next')"></a>
+		    </li>
+		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link3(${totalPages}, 'Last')"></a>
+		    </li>
+ 	 	</ul>
+	</nav>
+	</div>
+	<!-- End of Pagination -->
+	
+	<!-- Alert delete confirmation -->
+	<div class="modal" id="confirmModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Delete Confirmation</h4>
+ 				</div>
+ 				
+ 				<div class="modal-body">
+ 					<span id="confirmText"></span>
+ 				</div>
+ 				
+ 				<div class="modal-footer">
+ 					<a class="btn btn-success" href="" id="yesButton">Yes</a>
+ 					<a class="btn btn-danger" href="" data-dismiss="modal" id="noButton">No</a>
+ 				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End of delete confirmation alert-->
+	
+	<!-- End of the content -->
+
+	<div th:replace="navigation2 :: footer"></div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$(".link-delete").on("click",function(e) {
+				e.preventDefault();
+				link = $(this);
+				//alert($(this).attr("href"));
+				customerId = link.attr("customerId");
+				$("#yesButton").attr("href",link.attr("href"));
+				$("#confirmText").text("Are you sure you want to delete this client ID "+ customerId + "?");
+				$("#confirmModal").modal("show");
+			});
+			
+		});
+		
+		function clearFilter(){
+			window.location = "[[@{/admin/customers}]]";
+		}
+	</script>
+</body>
+</html>

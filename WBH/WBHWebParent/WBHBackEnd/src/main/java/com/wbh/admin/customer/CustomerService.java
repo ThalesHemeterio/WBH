@@ -1,5 +1,6 @@
 package com.wbh.admin.customer;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -13,7 +14,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.wbh.common.entity.Customer;
+import com.wbh.common.entity.User;
+
+import net.bytebuddy.utility.RandomString;
 
 @Service
 @Transactional
@@ -27,15 +30,15 @@ public class CustomerService {
 	@Autowired 
 	private PasswordEncoder passwordEncoder;
 	
-	public Customer getByEmail(String email) {
+	public User getByEmail(String email) {
 		return customerRepo.getCustomerByEmail(email);
 	}
 	
-	public List<Customer> listAll(){
-		return (List<Customer>) customerRepo.findAll();
+	public List<User> listAll(){
+		return (List<User>) customerRepo.findAll();
 	}
 	
-	public Page<Customer> listByPage(int pageNum, String sortField, String sortDir, String keyword){
+	public Page<User> listByPage(int pageNum, String sortField, String sortDir, String keyword){
 		Sort sort = Sort.by(sortField);	
 		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
 		
@@ -48,11 +51,11 @@ public class CustomerService {
 	}
 	
 
-	public Customer save(Customer customer) {
+	public User save(User customer) {
 		boolean isUpdatingCustomer = (customer.getId()!=null);								
 		
 		if(isUpdatingCustomer) {														// checking if you're are editing or creating a user if the same email.
-			Customer existingCustomer = customerRepo.findById(customer.getId()).get();
+			User existingCustomer = customerRepo.findById(customer.getId()).get();
 			
 			if(customer.getPassword().isEmpty()) {                                      // password is not required in changing you can keep the same just not fill the field
 				customer.setPassword(existingCustomer.getPassword());                
@@ -65,14 +68,14 @@ public class CustomerService {
 		return customerRepo.save(customer);
 	}
 	
-	public void encodePassword(Customer customer) {											// Function responsible for encoding the password 		
+	public void encodePassword(User customer) {											// Function responsible for encoding the password 		
 		String encodedPassowrd = passwordEncoder.encode(customer.getPassword());
 		customer.setPassword(encodedPassowrd);
 		
 	}
 	
 	public boolean isEmailUnique(Integer id, String email) {
-		Customer customerByEmail = customerRepo.getCustomerByEmail(email);
+		User customerByEmail = customerRepo.getCustomerByEmail(email);
 		
 		if(customerByEmail == null) return true;
 		
@@ -88,7 +91,7 @@ public class CustomerService {
 		return true;
 	}
 
-	public Customer get(Integer id) throws CustomerNotFoundException {
+	public User get(Integer id) throws CustomerNotFoundException {
 		try {
 			return customerRepo.findById(id).get();
 		} catch (NoSuchElementException ex) {
@@ -105,8 +108,8 @@ public class CustomerService {
 		customerRepo.deleteById(id);
 	}
 	
-	public Customer updateAccount(Customer customerInForm) {     // updates an account of a logged user
-		Customer customerInDB = customerRepo.findById(customerInForm.getId()).get();
+	public User updateAccount(User customerInForm) {     // updates an account of a logged user
+		User customerInDB = customerRepo.findById(customerInForm.getId()).get();
 		
 		if(!customerInForm.getPassword().isEmpty()) {
 			customerInDB.setPassword(customerInForm.getPassword());
@@ -124,5 +127,26 @@ public class CustomerService {
 	
 	public void updateCustomerEnabledStatus(Integer id, boolean enabled) {   // function to update enabled/disabled status of the user
 		customerRepo.updateEnableStatus(id, enabled);
+	}
+	public void registerCustomer(User customer) {
+		encodePassword(customer);
+		customer.setEnabled(false);
+		customer.setCreatedTime(new Date());
+		
+		String randomCode = RandomString.make(64);
+		customer.setVerificationCode(randomCode);
+		
+		customerRepo.save(customer);
+	}
+
+
+	public boolean verify(String verificationCode) {
+		User customer = customerRepo.findByVerificationCode(verificationCode);
+		if(customer == null || customer.isEnabled()) {
+			return false;
+		}else {
+			customerRepo.enable(customer.getId());
+			return true;
+		}
 	}
 }

@@ -21,11 +21,12 @@ import com.wbh.admin.category.CategoryService;
 import com.wbh.admin.customer.CustomerService;
 import com.wbh.admin.professional.ProfessionalNotFoundException;
 import com.wbh.admin.professional.ProfessionalService;
+import com.wbh.admin.user.RoleRepository;
 import com.wbh.common.entity.Category;
-import com.wbh.common.entity.Customer;
-import com.wbh.common.entity.Professional;
 import com.wbh.common.entity.Review;
+import com.wbh.common.entity.Role;
 import com.wbh.common.entity.Session;
+import com.wbh.common.entity.User;
 
 @Controller
 public class ReviewController {
@@ -33,14 +34,15 @@ public class ReviewController {
 	@Autowired ReviewService service;
 	@Autowired ProfessionalService serviceP;
 	@Autowired CustomerService serviceC;
+	@Autowired RoleRepository roleRepo;
 
 	
-	@GetMapping("/reviews")
+	@GetMapping("/admin/reviews")
 	public String listfirstPage(Model model) {
 		return listByPage(1,model, "id", "desc",null);
 	}
 	
-	@GetMapping("/reviews/page/{pageNum}")
+	@GetMapping("/admin/reviews/page/{pageNum}")
 	public String listByPage(
 				@PathVariable(name="pageNum") int pageNum, Model model, 
 				@Param("sortField") String sortField, @Param("sortDir") String sortDir,
@@ -68,23 +70,40 @@ public class ReviewController {
 		model.addAttribute("reverseSortDir",reverseSortDir);
 		model.addAttribute("keyword", keyword);
 		
-		return "reviews/reviews";
+		return "admin/reviews/reviews";
 	}
 	
-	@GetMapping("/reviews/new")
+	@GetMapping("/admin/reviews/new")
 	public String newReview(Model model) {
 		Review review = new Review();
 		review.setEnabled(false);
-		List<Professional> listProfessionals = serviceP.listAll();
-		List<Customer> listCustomers = serviceC.listAll();
+		List<User> listUsers = serviceP.listAll();
+		List<User> listProfessionals = serviceP.listAll();
+		listProfessionals.clear();
+		Role roleProfessional = roleRepo.getRoleById(3);/// passing only the user professionals
+		for(User user : listUsers) {	
+			if((user.getFirstRole()==roleProfessional)) {
+				listProfessionals.add(user);
+			}
+		}
+		Role roleCustomer = roleRepo.getRoleById(2); /// passing only the user clients
+		List<User> listUsers2 = serviceC.listAll();
+		List<User> listCustomers = serviceP.listAll();
+		listCustomers.clear();
+		for(User customer : listUsers2) {	
+			if((customer.getFirstRole()==roleCustomer)) {
+				listCustomers.add(customer);
+			}
+		}
+
 		model.addAttribute("review",review);
 		model.addAttribute("listProfessionals",listProfessionals);
 		model.addAttribute("listCustomers",listCustomers);
 		model.addAttribute("pageTitle", "Create new Review");
-		return "reviews/review_form";
+		return "admin/reviews/review_form";
 	}
 	
-	@PostMapping("/reviews/save")
+	@PostMapping("/admin/reviews/save")
 	public String saveReview(Review review, RedirectAttributes redirectAttributes) {
 		System.out.println(review);
 		service.save(review);
@@ -95,28 +114,28 @@ public class ReviewController {
 
 	private String getRedirectURLtoAffectedReview(Review review) {
 		String name = review.getTitle();
-		return "redirect:/reviews/page/1?sortField=id&sortDir=asc&keyword="+ name;
+		return "redirect:/admin/reviews/page/1?sortField=id&sortDir=asc&keyword="+ name;
 	}
 	
-	@GetMapping("/review/edit/{id}")
+	@GetMapping("/admin/review/edit/{id}")
 	public String editReview(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {
 			Review review = service.get(id);
-			List<Professional> listProfessionals = serviceP.listAll();
-			List<Customer> listCustomers = serviceC.listAll();
+			List<User> listProfessionals = serviceP.listAll();
+			List<User> listCustomers = serviceC.listAll();
 
 			model.addAttribute("listProfessionals",listProfessionals);
 			model.addAttribute("listCustomers",listCustomers);
 			model.addAttribute("review", review);
 			model.addAttribute("pageTitle", "Edit Review (ID: "+ id+")");
-			return "reviews/review_form";
+			return "admin/reviews/review_form";
 		} catch(ReviewNotFoundException ex){
 			redirectAttributes.addFlashAttribute("message", ex.getMessage());
 		}
-		return "redirect:/reviews";
+		return "redirect:/admin/reviews";
 	}
 	
-	@GetMapping("/review/delete/{id}")
+	@GetMapping("/admin/review/delete/{id}")
 	public String deleteReview(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {
 			service.delete(id);
@@ -124,17 +143,56 @@ public class ReviewController {
 		} catch(ReviewNotFoundException ex){
 			redirectAttributes.addFlashAttribute("message", ex.getMessage());
 		}
-		return "redirect:/reviews";
+		return "redirect:/admin/reviews";
 	}
 	
-	@GetMapping("/reviews/{id}/enabled/{status}")
+	@GetMapping("/admin/reviews/{id}/enabled/{status}")
 	public String updateReviewEnabledStatus(@PathVariable(name="id") Integer id, @PathVariable(name="status") boolean enabled, RedirectAttributes redirectAttributes) {
 		service.updateReviewEnabledStatus(id, enabled);
 		String status = enabled ?"enabled" :"disabled";
 		String message ="The Session Id " + id + " has been " + status;
 		redirectAttributes.addFlashAttribute("message", message);
-		return "redirect:/reviews";
+		return "redirect:/admin/reviews";
 	}
+	
+	
+	@GetMapping("/customers/reviews_customer")
+	public String listfirstPageReviews(Model model) {
+		return listfirstPageReviews(1,model, "id", "desc",null);
+	}
+	
+	@GetMapping("/customers/reviews_customer/page/{pageNum}")
+	public String listfirstPageReviews(
+				@PathVariable(name="pageNum") int pageNum, Model model, 
+				@Param("sortField") String sortField, @Param("sortDir") String sortDir,
+				@Param("keyword") String keyword) {
+		Page<Review> page = service.listByPage(pageNum, sortField, sortDir,keyword);
+		List<Review> listReviews = page.getContent();
+		
+		long startCount =(pageNum-1)*ReviewService.USERS_PER_PAGE+1;
+		long endCount = startCount+ReviewService.USERS_PER_PAGE-1;
+		if(endCount >page.getTotalElements()) {
+			endCount = page.getTotalElements();
+		}
+		
+		String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+		
+		//passing the attributes to the view
+		model.addAttribute("currentPage", pageNum);
+		model.addAttribute("totalPages", page.getTotalPages());
+		model.addAttribute("startCount", startCount);
+		model.addAttribute("endCount", endCount);
+		model.addAttribute("totalItems",page.getTotalElements());
+		model.addAttribute("listReviews",listReviews);
+		model.addAttribute("sortField",sortField);
+		model.addAttribute("sortDir",sortDir);
+		model.addAttribute("reverseSortDir",reverseSortDir);
+		model.addAttribute("keyword", keyword);
+		
+		return "customers/reviews_customer";
+	}
+	
+
 }
 
 

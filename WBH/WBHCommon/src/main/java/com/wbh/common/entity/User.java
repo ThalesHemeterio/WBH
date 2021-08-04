@@ -1,6 +1,8 @@
 package com.wbh.common.entity;
 
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -42,8 +44,32 @@ public class User {
 	@Column(length = 45, nullable = false)
 	private String contact;
 	
+	@Column(name = "address_line_1", length = 64, nullable = false)
+	private String addressLine1;
+	
+	@Column(name = "address_line_2", length = 128)
+	private String addressLine2;
+	
+	@Column(name = "postal_code", length = 128, nullable = false)
+	private String postalCode;
+	
 	@Column(length = 128, nullable = false)
-	private String address;
+	private String city;
+	
+	@Column(name = "country", length = 128, nullable = false)
+	private String country;
+	
+	@Column(length = 128)
+	private String title;
+	
+	@Column(length = 128)
+	private String qualification;
+	
+	@Column(name="created_time")
+	private Date createdTime;
+	
+	@Column(name="verification_code")
+	private String verificationCode;
 	
 	@Column(length = 64)
 	private String photos;
@@ -58,22 +84,97 @@ public class User {
 			)
 	private Set<Role> roles = new HashSet<>();
 
-	
+	public User() {
+		
+	}
 	
 	public User(String email, String password, String firstName, String lastName, String dob, String contact,
-			String address) {
+			String addressLine1, String postalCode, String city, String country) {
+		super();
 		this.email = email;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dob = dob;
 		this.contact = contact;
-		this.address = address;
+		this.addressLine1 = addressLine1;
+		this.postalCode = postalCode;
+		this.city = city;
+		this.country = country;
 	}
 
+
+
+	public String getAddressLine1() {
+		return addressLine1;
+	}
+
+	public void setAddressLine1(String addressLine1) {
+		this.addressLine1 = addressLine1;
+	}
+
+	public String getAddressLine2() {
+		return addressLine2;
+	}
+
+	public void setAddressLine2(String addressLine2) {
+		this.addressLine2 = addressLine2;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getQualification() {
+		return qualification;
+	}
+
+	public void setQualification(String qualification) {
+		this.qualification = qualification;
+	}
+
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
+
+	public String getVerificationCode() {
+		return verificationCode;
+	}
 	
-	
-	public User() {
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
 	}
 
 	public Integer getId() {
@@ -132,14 +233,6 @@ public class User {
 		this.contact = contact;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public String getPhotos() {
 		return photos;
 	}
@@ -168,12 +261,18 @@ public class User {
 		this.roles.add(role);
 	}
 
-
+	public Role getFirstRole() {
+	    for (Iterator<Role> it = roles.iterator(); it.hasNext(); ) {
+	    	Role f = it.next();
+	        if (f!=null) {
+	            return f;}
+	    }
+	    return null;
+	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + ", dob="
-				+ dob + ", contact=" + contact + ", address=" + address + ", roles=" + roles + "]";
+		return firstName + " " + lastName;
 	}
 	
 	@Transient
