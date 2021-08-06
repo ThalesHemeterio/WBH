@@ -11,9 +11,11 @@
     <div th:replace="navigation2 :: social_menu"></div>
 
         <!-- Main Page Heading -->
-        <div class="col-12 text-center mt-5">
+        <div class="col-12 text-center mt-4">
             <h1 class="display-4 pt-4">My Sessions</h1>
             <div class="border-top border-dark w-50 mx-auto my-3"></div>
+            <p class="lead">The sessions you have Created:</p>
+
         </div>
         
     <div th:if="${message != null}" class=" alert alert-success text-center">
@@ -24,7 +26,7 @@
 	<div class="text-center">
 	</div>
         <div class="container signform">
-            <div th:each = "sessionn : ${listSessions}" class="row py-4">
+            <div th:each = "sessionn : ${listSessions}" class="row bg-light border-light rounded mb-4 py-4">
                 <div class="sign col-lg-12 mb-4 my-lg-auto">
                     <div class="row">
                         <div class="col-3">
@@ -34,50 +36,39 @@
                         <div class="col-9">
                             <form action="index.html" onsubmit="index.html">
                                 <div class="row">
-                                    <div class="output col-5">
+                                    <div class="output col-8">
                                         <h5>[[${sessionn.professional}]]</h5>
                                     </div>
-                                    <div class="output col-6">
+                                    <div class="output col-4">
                                         <h5>Category: [[${sessionn.categories}]]</h5>
                                     </div>
-                                    <div class="output col-1">
-                                    </div>
                                 </div>
+                                
                                 <div class="row">
-                                    <div class="output col-5">
-                                        <h6></h6>
+                                    <div class="output col-8">
+                                        <h5>Session duration: [[${sessionn.duration}]] min</h5>
                                     </div>
-                                    <div class="output col-7">
-                                        <h6></h6>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="output col-12">
-                                        <h8></h8>
+                                    <div class="output col-4">
+                                        <h5>Price: &euro; [[${sessionn.price}]] </h5>
                                     </div>
                                 </div>
+                               
                                 <div class="row">
                                     <div class="output col-12">
-                                        <h8>Description: [[${sessionn.description}]]</h8>
+                                        <h6>Description: </h6>
+                                        <h6>[[${sessionn.description}]]</h6>
                                     </div>
+                                    &nbsp;
                                 </div>
                                 <div class="row">
-                                    <div class="output col-5">
-                                        <h5>Session duration: [[${sessionn.duration}]]</h5>
-                                    </div>
-                                    <div class="output col-6">
-                                        <h5>Price: [[${sessionn.price}]] </h5>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="output col-9">
-                                        <h6>Session: [[${sessionn.date}]] - [[${sessionn.startTime}]]</h6>
+                                &nbsp;
+                                    <div class="output col-12">
+                                        <h6>Date: [[${sessionn.date}]] at [[${sessionn.startTime}]]</h6>
                                     </div>
                                 </div>
-                                <div class="row">
-                                	 <a class="btn float-left btn-outline-dark link-delete btn-sm" th:href="@{'/professionals/session/delete/' +${sessionn.id}}" th:userId="${sessionn.id}" title="Delete this Session">Cancel Session</a>
-                                     <a class="btn float-right btn-outline-dark btn-sm" th:href="@{'/professionals/session/edit/' +${sessionn.id}}" th:userId="${sessionn.id}" title="Edit this Session">Edit Session</a>
+                                <div class="text_center">
+                                	 <a class="btn btn-dark btn-md" th:href="@{'/professionals/session/delete/' +${sessionn.id}}" th:userId="${sessionn.id}" title="Delete this Session">Cancel Session</a>
+                                     <a class="btn btn-secondary btn-outline-dark btn-md" th:href="@{'/professionals/session/edit/' +${sessionn.id}}" th:userId="${sessionn.id}" title="Edit this Session">Edit Session</a>
                                 </div>
                             </form>
                         </div>

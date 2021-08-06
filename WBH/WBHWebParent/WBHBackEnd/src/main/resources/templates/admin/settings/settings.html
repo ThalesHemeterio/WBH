@@ -11,23 +11,23 @@
 
 	<!-- Content -->
 	<div>
-		<h2 class="text-center m-3"> Site Settings</h2>
+		<h1 class="text-center m-3"> Site Settings</h1>
 		<div class="border-top border-dark w-50 mx-auto my-3"></div>
 	</div>
 		<div th:if="${message != null}" class=" alert alert-success text-center">
 		[[${message}]]
 	</div>
-	<div>
+	<div class="m-5 col-lg-11 mb-4 my-lg-auto p-3 bg-light">
 		<!-- Nav tabs -->
 		<ul class="nav nav-tabs" id="myTab" role="tablist">
 		  <li class="nav-item">
-		    <a class="nav-link active" data-toggle="tab" href="#general" role="tab" >General</a>
+		    <a class="nav-link active bg-light" data-toggle="tab" href="#general" role="tab" >General</a>
 		  </li>
 		  <li class="nav-item">
-		    <a class="nav-link" data-toggle="tab" href="#mailServer" role="tab" >Mail Server</a>
+		    <a class="nav-link bg-light" data-toggle="tab" href="#mailServer" role="tab" >Mail Server</a>
 		  </li>
 		  <li class="nav-item">
-		    <a class="nav-link" data-toggle="tab" href="#mailTemplate" role="tab">Mail Template</a>
+		    <a class="nav-link bg-light" data-toggle="tab" href="#mailTemplate" role="tab">Mail Template</a>
 		  </li>
 		</ul>
 		
@@ -46,7 +46,8 @@
 		</div>
 
 	</div>
-		
+	&nbsp;
+	&nbsp;	
 	<!-- End of the content -->
 
 

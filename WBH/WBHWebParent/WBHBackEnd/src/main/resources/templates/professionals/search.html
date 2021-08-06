@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-<head th:replace="fragmentsAdmin :: page_head('Search -  WBH','none')" />
+<head th:replace="fragments :: page_head('Search -  WBH')" />
 </head>
 
 <body>
-    <div id="navigation-sticky">
-
- 	<div th:replace="navigation2 :: menu"></div>
-    <div th:replace="navigation2 :: social_menu"></div>
+	<div th:replace="navigation2 :: menu"></div>
+	<div th:replace="navigation2 :: social_menu"></div>
 
         <!-- Main Page Heading -->
-        <div class="col-12 text-center mt-5">
+                <div class="col-12 text-center mt-4">
             <h1 class="display-4 pt-4">Search Professionals</h1>
             <div class="border-top border-dark w-50 mx-auto my-3"></div>
-            <p class="lead">Find you professional Now!</p>
-
+            <p class="lead">Find other professionals registered!</p>
         </div>
+    <div th:if="${message != null}" class=" alert alert-success text-center">
+		[[${message}]]
+	</div>
         <!-- Section to be filled-->
         <!-- Filter -->
 	<div class="text-center">
-		<form th:action="@{/search/page/1}" class="form-inline m-3">
+		<form th:action="@{professionals/search/page/1}" class="form-inline m-3">
 			<input type="hidden" name="sortField" th:value="${sortField}" />
 			<input type="hidden" name="sortDir" th:value="${sortDir}" />
 			Filter:&nbsp;
@@ -36,7 +36,7 @@
 		</form>
 	</div>
         <div class="container signform">
-            <div th:each = "sessionn : ${listSessions}" class="row py-4">
+            <div th:each = "sessionn : ${listSessions}" class="row bg-light border-light rounded mb-4 py-4">
                 <div class="sign col-lg-12 mb-4 my-lg-auto">
                     <div class="row">
                         <div class="col-3">
@@ -46,43 +46,49 @@
                         <div class="col-9">
                             <form action="index.html" onsubmit="index.html">
                                 <div class="row">
-                                    <div class="output col-5">
+                                    <div class="output col-8">
                                         <h5>[[${sessionn.professional}]]</h5>
                                     </div>
-                                    <div class="output col-6">
+                                    <div class="output col-4">
                                         <h5>Category: [[${sessionn.categories}]]</h5>
                                     </div>
                                 </div>
+                                
                                 <div class="row">
-                                    <div class="output col-5">
-                                        <h6></h6>
+                                    <div class="output col-8">
+                                        <h5>Session duration: [[${sessionn.duration}]] min</h5>
                                     </div>
-                                    <div class="output col-7">
-                                        <h6></h6>
+                                    <div class="output col-4">
+                                        <h5>Price: &euro; [[${sessionn.price}]] </h5>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="output col-12">
-                                        <h8></h8>
-                                    </div>
-                                </div>
+                               
                                 <div class="row">
                                     <div class="output col-12">
-                                        <h8>Description: [[${sessionn.description}]]</h8>
+                                        <h6>Description: </h6>
+                                        <h6>[[${sessionn.description}]]</h6>
+                                    </div>
+                                    &nbsp;
+                                </div>
+                                <div class="row">
+                                &nbsp;
+                                    <div class="output col-8">
+                                        <h6>Please Check availability: </h6>
+                                    </div>
+                                    <div class="output col-4">
+                                        <select>
+                                            <option value="">Select a session</option>
+                                            <option value="option">Date:[[${sessionn.date}]] Time: [[${sessionn.startTime}]]</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="output col-5">
-                                        <h5>Session duration: [[${sessionn.duration}]]</h5>
-                                    </div>
-                                    <div class="output col-6">
-                                        <h5>Price: [[${sessionn.price}]] </h5>
-                                    </div>
-
-                                </div>
-        					 </form>
-                        </div>
-
+                                	<div class="col-9"> </div>
+                                     <div class="col-3">           
+                                        <a th:href="@{'/professionals/reviews_professional/'+${sessionn.professional.id}}" th:userId="${sessionn.professional.id}" class="btn btn-secondary btn-outline-dark btn-md">Reviews</a>
+                                    </div>  
+                               </div>
+                        </form>
                     </div>
                 </div>
 
@@ -103,36 +109,68 @@
 	<nav>
   		<ul class="pagination justify-content-center flex-wrap">
 		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragmentsAdmin :: page_link6(1, 'First')"></a>
+		    	<a th:replace="fragmentsAdmin :: page_link7(1, 'First')"></a>
 		    </li>
 		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragmentsAdmin :: page_link6(${currentPage-1}, 'Previous')"></a>
+		    	<a th:replace="fragmentsAdmin :: page_link7(${currentPage-1}, 'Previous')"></a>
 		    </li>
 		    
 		    <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" 
 		    	th:each="i : ${#numbers.sequence(1,totalPages)}">
-		    	<a th:replace="fragmentsAdmin :: page_link6(${i}, ${i})"></a>
+		    	<a th:replace="fragmentsAdmin :: page_link7(${i}, ${i})"></a>
 		    </li>
 		    
 		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragmentsAdmin :: page_link6(${currentPage+1}, 'Next')"></a>
+		    	<a th:replace="fragmentsAdmin :: page_link7(${currentPage+1}, 'Next')"></a>
 		    </li>
 		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragmentsAdmin :: page_link6(${totalPages}, 'Last')"></a>
+		    	<a th:replace="fragmentsAdmin :: page_link7(${totalPages}, 'Last')"></a>
 		    </li>
  	 	</ul>
 	</nav>
 	</div>
 	<!-- End of Pagination -->
- 
-
-    <!-- Script Source Files -->
-
-    <!-- jQuery -->
-  
+	
+ <!-- Alert booking confirmation -->
+	<div class="modal" id="confirmModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Booking Confirmation</h4>
+ 				</div>
+ 				
+ 				<div class="modal-body">
+ 					<span id="confirmText"></span>
+ 				</div>
+ 				
+ 				<div class="modal-footer">
+ 					<a class="btn btn-success" href="" id="yesButton">Yes</a>
+ 					<a class="btn btn-danger" href="" data-dismiss="modal" id="noButton">No</a>
+ 				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End of delete confirmation alert-->
+	
 	<div th:replace="navigation2 :: footer"></div>
 	
-    <!-- End Script Source Files -->
+    <!-- Script Files -->
+ 	<script type="text/javascript">
+		$(document).ready(function() {
+			$(".link-delete").on("click",function(e) {
+				e.preventDefault();
+				link = $(this);
+				//alert($(this).attr("href"));
+				userId = link.attr("sessionnId");
+				$("#yesButton").attr("href",link.attr("href"));
+				$("#confirmText").text("Are you sure you want to book this session ?");
+				$("#confirmModal").modal("show");
+			});
+			
+		});
+		
+	</script>
+
 </body>
 
 </html>

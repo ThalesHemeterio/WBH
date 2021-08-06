@@ -10,32 +10,33 @@
 		<h2 class="text-center m-3">Manage Categories - [[${pageTitle}]]</h2>
 		<div class="border-top border-dark w-50 mx-auto my-3"></div>
 	</div>
-	<div>
-		<div class="container border border-secondary rounded p-3 mb-5">
-			<div class="row">
-				<div class="sign col-lg-12 mb-4 my-lg-auto">
+	<div class="d-flex justify-content-center">
+					<div class="col-lg-6 mb-4 my-lg-auto p-3 bg-light"
+						style="max-width: 900px; margin: 0 auto">
 					<h3 class="font-weight-bold mb-3">Please fill the information bellow:</h3>
 					<form th:action="@{/admin/categories/save}" method="post" th:object="${category}" 
 						 enctype="multipart/form-data">
+						 <div class="boder border-secondary rounded p-3">
 						<input type="hidden" th:field="*{id}"/>
-						<div class="form-gorup row">
-							<label class="label col-sm-4 col-form-label">Category Name:</label>
+						
+						<div class="form-group row mb-2">
+							<label class="col-sm-4 col-form-label">Category Name:</label>
 							<div class="input col-sm-8">
-								<input type="text" th:field="*{name}" placeholder="Category ame..." required minlength="3" maxlength="128"/>
+								<input class="form-control" type="text" th:field="*{name}" placeholder="Category name..." required maxlength="128"/>
 							</div>
 						</div>
 						
-						<div class="form-gorup row">
-							<label class="label col-sm-4 col-form-label">Description:</label>
+						<div class="form-group row mb-2">
+							<label class="col-sm-4 col-form-label">Description:</label>
 							<div class="input col-sm-8">
-								<input type="text" th:field="*{description}" placeholder="Category Description..." required minlength="3" maxlength="128"/>
+								<input class="form-control" type="text" th:field="*{description}" placeholder="Category Description..." required minlength="3" maxlength="128"/>
 							</div>
 						</div>
 
-						<div class="form-gorup row">
-							<label class="label col-sm-4 col-form-label">Parent:</label>
+						<div class="form-group row mb-2">
+							<label class=" col-sm-4 col-form-label">Parent:</label>
 							<div class="input col-sm-8">
-								<select th:field="*{parent}">
+								<select class="form-control" th:field="*{parent}">
 									<option value="0">[No Parent]</option>
 									
 									<th:block th:each="category : ${listCategories}">
@@ -46,8 +47,8 @@
 							</div>
 						</div>			
 						
-						<div class="form-gorup row">
-							<label class="label col-sm-4 col-form-label">Enabled:</label>
+						<div class="form-gorup row mb-2">
+							<label class="col-sm-4 col-form-label">Enabled:</label>
 							<div class="input col-sm-8">
 							<input type="checkbox" th:field="*{enabled}"/>
 							</div>
@@ -55,14 +56,14 @@
 						
 	
 						<div class="text-center">
-							<input type="submit" value="Save" class="btn btn-primary btn-outline-dark btn-lg" /> 
+							<input type="submit" class="btn btn-dark btn-lg" value="Submit" />
 							<input type="button" value="Cancel" class="btn btn-secondary btn-outline-dark btn-lg" id="buttonCancel" />
 						</div>
+					</div>
 				</form>
 			</div>
 		</div>
-		</div>
-	</div>
+
 	<!-- End of the content -->
 	<!-- Alert email duplicated -->
 	<div class="modal" id="modalDialog">
@@ -80,7 +81,8 @@
 			</div>
 		</div>
 	</div>
-
+&nbsp;
+&nbsp;
 	<div th:replace="navigation2 :: footer"></div>
 
 	<!-- Script Source Files -->

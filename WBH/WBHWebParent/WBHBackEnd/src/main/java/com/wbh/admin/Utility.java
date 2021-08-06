@@ -8,6 +8,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import com.wbh.admin.setting.EmailSettingBag;
 
+
+// class used for the registration email verification of new customers
 public class Utility {
 	public static String getSiteURL(HttpServletRequest request) {
 		String siteURL = request.getRequestURL().toString();

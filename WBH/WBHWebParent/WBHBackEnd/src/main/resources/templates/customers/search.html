@@ -38,7 +38,7 @@
 		</form>
 	</div>
         <div class="container signform">
-            <div th:each = "sessionn : ${listSessions}" class="row py-4">
+            <div th:each = "sessionn : ${listSessions}" class="row bg-light border-light rounded mb-4 py-4">
                 <div class="sign col-lg-12 mb-4 my-lg-auto">
                     <div class="row">
                         <div class="col-3">
@@ -48,57 +48,49 @@
                         <div class="col-9">
                             <form action="index.html" onsubmit="index.html">
                                 <div class="row">
-                                    <div class="output col-5">
+                                    <div class="output col-8">
                                         <h5>[[${sessionn.professional}]]</h5>
                                     </div>
-                                    <div class="output col-6">
+                                    <div class="output col-4">
                                         <h5>Category: [[${sessionn.categories}]]</h5>
                                     </div>
-                                    <div class="output col-1">
-                                        <a href="#" class="btn float-right btn-outline-dark">Reviews</a>
-                                    </div>
                                 </div>
+                                
                                 <div class="row">
-                                    <div class="output col-5">
-                                        <h6></h6>
+                                    <div class="output col-8">
+                                        <h5>Session duration: [[${sessionn.duration}]] min</h5>
                                     </div>
-                                    <div class="output col-7">
-                                        <h6></h6>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="output col-12">
-                                        <h8></h8>
+                                    <div class="output col-4">
+                                        <h5>Price: &euro; [[${sessionn.price}]] </h5>
                                     </div>
                                 </div>
+                               
                                 <div class="row">
                                     <div class="output col-12">
-                                        <h8>Description: [[${sessionn.description}]]</h8>
+                                        <h6>Description: </h6>
+                                        <h6>[[${sessionn.description}]]</h6>
+                                        
+										
+										
                                     </div>
+                                    &nbsp;
                                 </div>
                                 <div class="row">
-                                    <div class="output col-5">
-                                        <h5>Session duration: [[${sessionn.duration}]]</h5>
+                                &nbsp;
+                                    <div class="output col-8">
+                                        <h6>Please Check availability: </h6>
                                     </div>
-                                    <div class="output col-6">
-                                        <h5>Price: [[${sessionn.price}]] </h5>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="output col-9">
-                                        <h6>Please Chack availability: </h6>
+                                    <div class="output col-4">
                                         <select>
                                             <option value="">Select a session</option>
                                             <option value="option">[[${sessionn.date}]] + [[${sessionn.startTime}]]</option>
                                         </select>
                                     </div>
-                                    <div class="output col-3">
-                                        <a class="btn float-left btn-outline-dark btn-lg"  th:href="@{'/customers/search/booking/pay/' +${sessionn.id}}" th:userId="${sessionn.id}">Book Now</a>
-                                    </div>
                                 </div>
-                                <div class="row"></div>
-                        </div>
+                                    <div class="text-center">
+                                        <a class="btn btn-dark btn-md"  th:href="@{'/customers/search/booking/pay/' +${sessionn.id}}" th:userId="${sessionn.id}">Book Now</a>
+                                        <a th:href="@{'/customers/reviews_professional/'+${sessionn.professional.id}}" th:userId="${sessionn.professional.id}" class="btn btn-secondary btn-outline-dark btn-md">Reviews</a>
+                                    </div>  
                         </form>
                     </div>
                 </div>

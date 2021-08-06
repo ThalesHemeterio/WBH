@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 // class responsible for saving the user photos
 
 public class FileUploadUtil {
-
+	//method use to save the photos
 	public static void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
 		Path uploadPath = Paths.get(uploadDir);
 		if(!Files.exists(uploadPath)) {
@@ -25,7 +25,7 @@ public class FileUploadUtil {
 			throw new IOException("Could not save the file: "+fileName, ex);
 		}
 	}
-	
+	//method to clean the folder when updating/deleting photos
 	public static void cleanDirectory (String directory) {
 		Path dirPath = Paths.get(directory);
 		

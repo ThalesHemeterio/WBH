@@ -21,6 +21,8 @@ public class CategoryController {
 	@Autowired
 	private CategoryService service;
 	
+	
+	
 	@GetMapping("/admin/categories")
 	public String listAll(Model model) {
 		List<Category> listCategories = service.listAll();

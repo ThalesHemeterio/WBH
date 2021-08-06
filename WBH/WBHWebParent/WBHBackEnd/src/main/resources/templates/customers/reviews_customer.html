@@ -23,46 +23,49 @@
         <!-- Filter -->
 	<div>
 	</div>
-        <div class="container">
-            <div th:each = "review : ${listReviews}" class="row py-4 border border-dark rounded">
-                <div class="sign col-lg-12 mb-4 my-lg-auto">
+    <div class="d-flex justify-content-center">
+		<div class="col-lg-9 mb-4 my-lg-auto p-3"
+			style="max-width: 900px; margin: 0 auto">
+            <div th:each = "review : ${listReviews}" class="row bg-light border-light rounded mb-4">
+                <div class="col-lg-12 my-lg-auto">
                             <form action="" onsubmit="" class="m-3">
                                 <div class="row">
-                                    <div class="output col-9">
+                                    <div class="output col-8">
                                         <h4>[[${review.title}]]</h4>
                                     </div>
-                                    <div class="output col-3">
+                                    <div class="output col-4">
                                         <h4>Rate: [[${review.rate}]] </h4>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="output col-12">
+                                    <div class="output col-8">
                                         <h6>Professional: [[${review.professional}]]</h6>
                                     </div>
-                                </div>
-                                <div class="row">
-                                  <div class="output col-7">
+                                    <div class="output col-4">
                                         <h6>Client: [[${review.customer}]]</h6>
                                     </div>
-                                 </div>
+                                </div>
                                 <div class="row">
                                     <div class="output col-12">
                                         <h6>Review: [[${review.text}]]</h6>
+                                        &nbsp;
+										&nbsp;
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="output col-12">
+                                    <div class="output col-8">
                                         <h6>Date: [[${review.createdTime}]]</h6>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="output col-12">
+                                    <div class="output col-4">
                                         <h6>Review moderated: [[${review.enabled}]] </h6>
                                     </div>
                                 </div>
-                                <div class="row text-center mx-auto">
-                                	 <a class="btn float-left btn-outline-dark link-delete btn-sm col-3" th:href="@{'/customers/review/delete/' +${review.id}}" th:userId="${review.id}" title="Cancel this Booking">Delete Review</a>
-                                     <a class="btn float-right btn-outline-dark btn-sm col-3" th:href="@{'/customers/review/edit/' +${review.id}}" th:userId="${review.id}" title="Review this Session">Edit Review</a>
+                                <div class="row">
+
+                                </div>
+                                <div class="text-center">                          
+                                	 <a class="btn btn-dark btn-md" th:href="@{'/customers/review/delete/' +${review.id}}" th:userId="${review.id}" title="Cancel this Booking">Delete Review</a>
+                                     <a class="btn btn-secondary btn-outline-dark btn-md" th:href="@{'/customers/review/edit/' +${review.id}}" th:userId="${review.id}" title="Review this Session">Edit Review</a>
                                 </div>
                             </form>    
                 </div>  
@@ -70,7 +73,8 @@
         </div>
         <!-- End of Section to be filled-->
 
-    </div> <!-- End Social Media Sticky -->
+    </div>
+    
  <!-- Alert delete confirmation -->
 	<div class="modal" id="confirmModal">
 		<div class="modal-dialog">

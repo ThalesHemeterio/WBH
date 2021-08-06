@@ -7,14 +7,14 @@
 		<div th:replace="navigation :: social_menu"></div>
 	</div>
 	<!-- Content -->
-	<div class="col-12 text-center mt-5">
+	<div class="col-12 text-center mt-4">
 		<h1 class="display-4 pt-4">LogIn</h1>
 		<div class="border-top border-dark w-50 mx-auto my-3"></div>
 		<p class="lead">We have multiple services that can improve your
 			well-being!</p>
 	</div>
 	<!-- Section to be filled-->
-	<div class="container-fluid text-center border border-secondary rounded p-3 mb-5" style="max-width: 500px; margin: 0 auto!important">
+	<div class="col-lg-6 mb-5 my-lg-auto p-3 bg-light text-center rounded" style="max-width: 500px; margin: 0 auto!important">
 		<h5 class="font-weight-bold mb-1">Please fill the information bellow:</h5>
 		<form th:action="@{/login}" method="post">
 			<div th:if="${param.error}">
@@ -51,7 +51,7 @@
 	<div>&nbsp;</div>
 
 	<!-- End of the content -->
-
+ 	&nbsp; &nbsp;
 	<div th:replace="navigation :: footer"></div>
 
 </body>

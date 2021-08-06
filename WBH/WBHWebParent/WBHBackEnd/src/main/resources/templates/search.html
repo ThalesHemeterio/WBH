@@ -11,8 +11,8 @@
     <div th:replace="navigation :: social_menu"></div>
 
         <!-- Main Page Heading -->
-        <div class="col-12 text-center mt-5">
-            <hi class="display-4 pt-4">Search Professionals</hi>
+        <div class="col-12 text-center mt-4">
+            <h1 class="display-4 pt-4">Search Professionals</h1>
             <div class="border-top border-dark w-50 mx-auto my-3"></div>
             <p class="lead">Find you professional Now!</p>
 
@@ -36,69 +36,59 @@
 		</form>
 	</div>
         <div class="container signform">
-            <div th:each = "sessionn : ${listSessions}" class="row py-4">
+            <div th:each = "sessionn : ${listSessions}"  class="row bg-light border-light rounded mb-4 py-4">
                 <div class="sign col-lg-12 mb-4 my-lg-auto">
                     <div class="row">
                         <div class="col-3">
                             <span th:if="${sessionn.professional.photos==null}" class="fas fa-portrait fa-4x icon-silver"></span>
 							<img th:if="${sessionn.professional.photos!=null}" th:src="@{${sessionn.professional.photosImagePath}}" style="width:250px"/>
                         </div>
-                        <div class="col-9">
+  						<div class="col-9">
                             <form action="index.html" onsubmit="index.html">
                                 <div class="row">
-                                    <div class="output col-5">
+                                    <div class="output col-8">
                                         <h5>[[${sessionn.professional}]]</h5>
                                     </div>
-                                    <div class="output col-6">
+                                    <div class="output col-4">
                                         <h5>Category: [[${sessionn.categories}]]</h5>
                                     </div>
                                 </div>
+                                
                                 <div class="row">
-                                    <div class="output col-5">
-                                        <h6></h6>
+                                    <div class="output col-8">
+                                        <h5>Session duration: [[${sessionn.duration}]] min</h5>
                                     </div>
-                                    <div class="output col-7">
-                                        <h6></h6>
+                                    <div class="output col-4">
+                                        <h5>Price: &euro; [[${sessionn.price}]] </h5>
                                     </div>
                                 </div>
+                               
                                 <div class="row">
                                     <div class="output col-12">
-                                        <h8></h8>
+                                        <h6>Description: </h6>
+                                        <h6>[[${sessionn.description}]]</h6>
                                     </div>
+                                    &nbsp;
                                 </div>
+                                 &nbsp;
                                 <div class="row">
-                                    <div class="output col-12">
-                                        <h8>Description: [[${sessionn.description}]]</h8>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="output col-5">
-                                        <h5>Session duration: [[${sessionn.duration}]]</h5>
-                                    </div>
-                                    <div class="output col-6">
-                                        <h5>Price: [[${sessionn.price}]] </h5>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="output col-9">
+                                   <div class="output col-8">
                                         <h6>Register or login to Check availability: </h6>
                                     </div>
+	                                <div class="col-4">
+	        							<a th:href="@{/register/register_customer}" class="btn btn-dark btn-md">Register</a>
+	        						    <a th:href="@{/login}" class="btn btn-secondary btn-outline-dark btn-md">Login</a>
+	                                </div>
                                 </div>
-                                &nbsp;
-                                <div class="row">
-        							 <div class="output col-4">
-        							    <a th:href="@{/register/register_customer}" class="btn float-left btn-outline-dark btn-lg">Register</a>
-        							     <a th:href="@{/login}" class="btn float-left btn-outline-dark btn-lg">Login</a>
-                                    </div>
-                                </div>
-                        </div>
-                        </form>
+                        	 </form>
+						</div>
                     </div>
                 </div>
 
             </div>
         </div>
+        
+        
         <!-- End of Section to be filled-->
 
     </div> <!-- End Social Media Sticky -->
@@ -135,7 +125,7 @@
 	</nav>
 	</div>
 	<!-- End of Pagination -->
- 
+ 	&nbsp;&nbsp;
 
     <!-- Script Source Files -->
 

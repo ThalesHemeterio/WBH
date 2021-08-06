@@ -8,11 +8,20 @@
 	<div th:replace="navigation2 :: social_menu"></div>
 
 	<!-- Content -->
-		<h2> WHB Control Panel</h2>
-		 Welcome 
-		 <a th:href="@{/admin/account}" sec:authentication="principal.fullname"></a>
-		 <span sec:authentication="principal.authorities"></span>
+
+		<div class="text-center m-5">
+			<h4> WHB Control Panel - 
+			 Welcome 
+			 <a th:href="@{/admin/account}" sec:authentication="principal.fullname"></a>
+			 <span sec:authentication="principal.authorities">&nbsp;
+			 </span><br><br><br></h4>
+			 <h1 class="italic">Wellbeing is the greatest possession!</h1>
+			 <h4>Wbh - Wellbeing Services<br><br><br></h4>
+			 <img style="height: 10rem" th:src="@{/img/2618.png}" alt="Logo" title="Logo">
+		 </div>
+
 	 
+	 	
 	<!-- End of Content -->
 
 	<div th:replace="navigation2 :: footer"></div>

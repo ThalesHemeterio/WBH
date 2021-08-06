@@ -15,10 +15,9 @@
 	</div>
 
 	<!-- Section to be filled-->
-
-		<div class="container border border-secondary rounded p-3 mb-5">
-			<div class="row">
-				<div class="sign col-lg-12 mb-4 my-lg-auto">
+	<div class="d-flex justify-content-center">
+		<div class="col-lg-7 mb-4 my-lg-auto p-3 bg-light"
+		style="max-width: 900px; margin: 0 auto">
 					<h3 class="font-weight-bold mb-3">Please fill the information
 						bellow:</h3>
 					<form th:action="@{/admin/customers/save}" method="post"
@@ -26,7 +25,8 @@
 						onsubmit="return checkEmailUnique(this);"
 						enctype="multipart/form-data">
 						<input type="hidden" th:field="*{id}" />
-						<div class="form-group row">
+						
+						<div class="form-group row mb-2">
 							<label class="col-sm-4 col-form-label">First Name:</label>
 							<div class="input col-sm-8">
 								<input type="text" th:field="*{firstName}"
@@ -35,7 +35,7 @@
 							</div>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row mb-2">
 							<label class="col-sm-4 col-form-label">Last Name:</label>
 							<div class="input col-sm-8">
 								<input type="text" th:field="*{lastName}"
@@ -44,7 +44,7 @@
 							</div>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row mb-2">
 							<label class="col-sm-4 col-form-label">Email:</label>
 							<div class="input col-sm-8">
 								<input type="email" th:field="*{email}"
@@ -53,8 +53,8 @@
 							</div>
 						</div>
 
-				<div class="form-group row">
-					<label class="col-sm-4 col-form-label">Password:</label>
+				<div class="form-group row mb-2">
+							<label class="col-sm-4 col-form-label">Password:</label>
 					<div class="input col-sm-8">
 						<input th:if="${customer.id ==null}" type="password" th:field="*{password}"
 							placeholder="Your passowrd..." required minlength="6"
@@ -67,8 +67,8 @@
 					</div>
 				</div>
 
-				<div class="form-group row">
-					<label class="col-sm-4 col-form-label">Re-type Password:</label>
+				<div class="form-group row mb-2">
+							<label class="col-sm-4 col-form-label">Re-type Password:</label>
 					<div class="input col-sm-8">
 						<input th:if="${customer.id ==null}"  type="password" id="confirmPassword" th:field="*{password}"
 							placeholder="Confirm passowrd..." required minlength="6"
@@ -81,7 +81,7 @@
 					</div>
 				</div>
 
-						<div class="form-group row">
+						<div class="form-group row mb-2">
 							<label class="col-sm-4 col-form-label">Phone:</label>
 							<div class="input col-sm-8">
 								<input type="tel" th:field="*{contact}"
@@ -90,7 +90,7 @@
 							</div>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row mb-2">
 							<label class="col-sm-4 col-form-label">Date of Birth:</label>
 							<div class="input col-sm-8">
 								<input type="date" th:field="*{dob}" minlength="10"
@@ -98,27 +98,27 @@
 							</div>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row mb-2">
 							<label class="col-sm-4 col-form-label">Address Line 1:</label>
 							<div class="input col-sm-8">
-								<input type="text" th:field="*{addressLine1}"
+								<textarea type="text" th:field="*{addressLine1}"
 									placeholder="Please enter your address..."
 									style="height: 100px" minlength="20" maxlength="100" required
-									class="form-control" />
+									class="form-control"></textarea>
 							</div>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row mb-2">
 							<label class="col-sm-4 col-form-label">Address Line 2:</label>
 							<div class="input col-sm-8">
-								<input type="text" th:field="*{addressLine2}"
+								<textearea type="text" th:field="*{addressLine2}"
 									placeholder="Please enter your address..."
 									style="height: 100px" minlength="20" maxlength="100"
-									class="form-control" />
+									class="form-control"></textearea>
 							</div>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row mb-2">
 							<label class="col-sm-4 col-form-label">Postal Code:</label>
 							<div class="input col-sm-8">
 								<input type="text" th:field="*{postalCode}"
@@ -127,7 +127,7 @@
 							</div>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row mb-2">
 							<label class="col-sm-4 col-form-label">City</label>
 							<div class="input col-sm-8">
 								<input type="text" th:field="*{city}" placeholder="Your city..."
@@ -135,7 +135,7 @@
 							</div>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row mb-2">
 							<label class="col-sm-4 col-form-label">Country</label>
 							<div class="input col-sm-8">
 								<input type="text" th:field="*{country}"
@@ -144,8 +144,8 @@
 							</div>
 						</div>
 						
-						<div class="form-gorup row">
-							<label class="label col-sm-4 col-form-label">Roles:</label>
+						<div class="form-group row mb-2">
+							<label class="col-sm-4 col-form-label">Roles:</label>
 							<div class="input col-sm-8">
 								<th:block th:each="role : ${listRoles}">
 									<input type="checkbox" th:field="*{roles}"
@@ -156,15 +156,15 @@
 							</div>
 						</div>
 
-						<div class="form-gorup row">
-							<label class="label col-sm-4 col-form-label">Enabled:</label>
+						<div class="form-group row mb-2">
+							<label class="col-sm-4 col-form-label">Enabled:</label>
 							<div class="input col-sm-8">
 								<input type="checkbox" th:field="*{enabled}" />
 							</div>
 						</div>
 						
-					<div class="form-gorup row">
-							<label class="label col-sm-4 col-form-label">Photos:</label>
+					<div class="form-group row mb-2">
+							<label class="col-sm-4 col-form-label">Photos:</label>
 							<div class="input col-sm-8">
 							<input type="hidden" th:field="*{photos}" />
 								<input type="file" id="fileImage" name="image" accept="image/png, image/jpeg" class="mb-2"/>
@@ -172,15 +172,15 @@
 									class="img-fluid"/>
 							</div>
 						</div>
-						<div class="row p-2 text-center">
-							<input type="submit" class="btn btn-dark btn-lg"
-								value="Submit" />
+						<div class="p-2 text-center">
+							<input type="submit" class="btn btn-dark btn-lg" value="Submit" />
+							<input type="button" value="Cancel" class="btn btn-secondary btn-outline-dark btn-lg" id="buttonCancel" />
 						</div>
 
 					</form>
 				</div>
 			</div>
-		</div>
+
 		<!-- End of Section to be filled-->
 
 		<!-- Alert email duplicated -->
@@ -200,11 +200,12 @@
 				</div>
 			</div>
 		</div>
-
+&nbsp;
+&nbsp;
 		<div th:replace="navigation2 :: footer"></div>
 
 		<script type="text/javascript">
-			moduleURL = "[[@{/admin/}]]";
+			moduleURL = "[[@{/admin/customers}]]";
 			function checkPassowrdField(confirmPassword) {
 				if (confirmPassword.value != $("#password").val()) {
 					confirmPassword.setCustomValidity("Passwords do not match");
@@ -253,7 +254,7 @@
 			}
 		</script>
 
-
+		<script th:src="@{/js/common_forms.js}"></script>
 		<!-- End Script Source Files -->
 </body>
 </html>
