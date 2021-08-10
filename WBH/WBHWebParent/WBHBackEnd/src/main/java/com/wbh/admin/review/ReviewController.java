@@ -44,6 +44,9 @@ public class ReviewController {
 	@Autowired SessionService sessionService;
 
 	
+	/*********ADMIN APPLICATION SIDE*********/
+	
+	// display all reviews Admin user with pagination
 	@GetMapping("/admin/reviews")
 	public String listfirstPage(Model model) {
 		return listByPage(1,model, "id", "desc",null);
@@ -80,6 +83,7 @@ public class ReviewController {
 		return "admin/reviews/reviews";
 	}
 	
+	//creating new review Admin user
 	@GetMapping("/admin/reviews/new")
 	public String newReview(Model model) {
 		Review review = new Review();
@@ -110,6 +114,7 @@ public class ReviewController {
 		return "admin/reviews/review_form";
 	}
 	
+	//saves the new review by Admin user
 	@PostMapping("/admin/reviews/save")
 	public String saveReview(Review review, RedirectAttributes redirectAttributes) {
 		System.out.println(review);
@@ -119,11 +124,13 @@ public class ReviewController {
 		return getRedirectURLtoAffectedReview(review);
 	}
 
+	//redirects to all reviews page but filtering the new review done by Admin user
 	private String getRedirectURLtoAffectedReview(Review review) {
 		String name = review.getTitle();
 		return "redirect:/admin/reviews/page/1?sortField=id&sortDir=asc&keyword="+ name;
 	}
 	
+	//edits a review Admin User
 	@GetMapping("/admin/review/edit/{id}")
 	public String editReview(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {
@@ -142,6 +149,7 @@ public class ReviewController {
 		return "redirect:/admin/reviews";
 	}
 	
+	// Admin user deletes a review 
 	@GetMapping("/admin/review/delete/{id}")
 	public String deleteReview(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {
@@ -153,6 +161,7 @@ public class ReviewController {
 		return "redirect:/admin/reviews";
 	}
 	
+	//Admin user change enabled status of a review - CONTENT MODERATION
 	@GetMapping("/admin/reviews/{id}/enabled/{status}")
 	public String updateReviewEnabledStatus(@PathVariable(name="id") Integer id, @PathVariable(name="status") boolean enabled, RedirectAttributes redirectAttributes) {
 		service.updateReviewEnabledStatus(id, enabled);
@@ -163,29 +172,23 @@ public class ReviewController {
 	}
 	
 	
+	/*********CLIENT(CUSTOMER) APPLICATION SIDE*********/
+	
+	//list all the reviews by an User Client(Customer)
 	@GetMapping("/customers/reviews_customer")
 	public String listfirstPageReviews(@AuthenticationPrincipal WBHUserDetails loggedUser,Model model) {
-		String email = loggedUser.getUsername();
-		User user = serviceP.getByEmail(email);
-		model.addAttribute("user", user);
-		return listfirstPageReviews(user,1,model, "id", "desc",null);
+		return listfirstPageReviews(loggedUser,1,model, "id", "desc",null);
 	}
 	
 	@GetMapping("/customers/reviews_customer/page/{pageNum}")
-	public String listfirstPageReviews(User user,
+	public String listfirstPageReviews(@AuthenticationPrincipal WBHUserDetails loggedUser,
 				@PathVariable(name="pageNum") int pageNum, Model model, 
-				@Param("sortField") String sortField, @Param("sortDir") String sortDir,
-				@Param("keyword") String keyword) {
-		Page<Review> page = service.listByPage(pageNum, sortField, sortDir,keyword);
-		
-		List<Review> listAllReviews = page.getContent();
-		List<Review> listReviews = new ArrayList<Review>();
-		for(Review review : listAllReviews) {	
-			if((review.getCustomer()== user)) {
-				listReviews.add(review);
-			}
-		}
-		
+				@Param("sortField") String sortField, @Param("sortDir") String sortDir,@Param("keyword") String keyword) {
+		String email = loggedUser.getUsername();
+		User user = serviceP.getByEmail(email);
+		model.addAttribute("user", user);
+		Page<Review> page = service.listCustomerReviwesByPage(pageNum, sortField, sortDir,user);		
+		List<Review> listReviews = page.getContent();
 		long startCount =(pageNum-1)*ReviewService.USERS_PER_PAGE+1;
 		long endCount = startCount+ReviewService.USERS_PER_PAGE-1;
 		if(endCount >page.getTotalElements()) {
@@ -209,6 +212,7 @@ public class ReviewController {
 		return "customers/reviews_customer";
 	}
 	
+	//edit a review by an User Client(Customer)
 	@GetMapping("/customers/review/edit/{id}")
 	public String editReviewCustomer(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {
@@ -227,6 +231,7 @@ public class ReviewController {
 		return "redirect:/customers/reviews_customer";
 	}
 	
+	//delete a review by an User Client(Customer)
 	@GetMapping("/customers/review/delete/{id}")
 	public String deleteReviewCustomer(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {
@@ -238,6 +243,7 @@ public class ReviewController {
 		return "redirect:/customers/reviews_customer";
 	}
 	
+	//save a review by an User Client(Customer)
 	@PostMapping("/customers/reviews/save")
 	public String saveReviewCustomer(Review review, RedirectAttributes redirectAttributes) {
 
@@ -247,6 +253,7 @@ public class ReviewController {
 		return "redirect:/customers/reviews_customer";
 	}
 
+	//list all the reviews of a User Professional to a User Client(Customer)
 	@GetMapping("/customers/reviews_professional/{id}")
 	public String listfirstPageReviewsCustomer(@PathVariable(name="id") Integer id,Model model) throws ProfessionalNotFoundException {
 		User user = serviceP.get(id);
@@ -254,20 +261,15 @@ public class ReviewController {
 		return listfirstPageReviewsCustomer(user,1,model, "id", "desc",null);
 	}
 	
+	//gets all reviews of a professional to an user client
 	@GetMapping("/customers/reviews_professional/page/{pageNum}")
 	public String listfirstPageReviewsCustomer(User user,
 				@PathVariable(name="pageNum") int pageNum, Model model, 
 				@Param("sortField") String sortField, @Param("sortDir") String sortDir,
 				@Param("keyword") String keyword) {
-		Page<Review> page = service.listByPage(pageNum, sortField, sortDir,keyword);
-		List<Review> listAllReviews = page.getContent();
-		List<Review> listReviews = new ArrayList<Review>();
-		for(Review review : listAllReviews) {	
-			if((review.getProfessional() == user && review.isEnabled())) {
-				listReviews.add(review);
-			}
-		}
-		
+		Page<Review> page = service.listReviewsByProfessional(user,pageNum, sortField, sortDir,keyword);
+		List<Review> listReviews = page.getContent();
+
 		long startCount =(pageNum-1)*ReviewService.USERS_PER_PAGE+1;
 		long endCount = startCount+ReviewService.USERS_PER_PAGE-1;
 		if(endCount >page.getTotalElements()) {
@@ -287,18 +289,18 @@ public class ReviewController {
 		model.addAttribute("sortDir",sortDir);
 		model.addAttribute("reverseSortDir",reverseSortDir);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("professional", user.getFullName());
 		
 		return "customers/reviews_professional";
 	}
 	
+	//creates a new review by an User Client(Customer)
 	@GetMapping("/customers/session/review/{id}")
 	public String newReviewCustomer(@PathVariable(name="id") Integer id,Model model) throws SessionNotFoundException {
 		Review review = new Review();
 		review.setEnabled(false);
-		
+	
 		Session session = sessionService.get(id);
-		
-		
 		User listProfessionals = session.getProfessional();
 		User listCustomers = session.getCustomer();
 
@@ -309,21 +311,23 @@ public class ReviewController {
 		return "customers/review_form";
 	}
 	
-	// professionals review page - professional side
+	/*********PROFESSIONALS APPLICATION SIDE*********/
 	
+	//list all reviews of an User Professional
 	@GetMapping("/professionals/reviews_professional/{id}")
 	public String listfirstPageReviewsProfessional(@PathVariable(name="id") Integer id,Model model) throws ProfessionalNotFoundException {
 		User user = serviceP.get(id);
 		model.addAttribute("user", user);
-		return listfirstPageReviewsProfessional(user,1,model, "id", "desc",null);
+		return listfirstPageReviewsProfessional(id,1,model, "id", "desc",null);
 	}
 	
-	@GetMapping("/professionals/reviews_professional/page/{pageNum}")
-	public String listfirstPageReviewsProfessional(User user,
+	@GetMapping("/professionals/reviews_professional/page/{id}/{pageNum}")
+	public String listfirstPageReviewsProfessional(@PathVariable(name="id") Integer id,
 				@PathVariable(name="pageNum") int pageNum, Model model, 
 				@Param("sortField") String sortField, @Param("sortDir") String sortDir,
-				@Param("keyword") String keyword) {
-		Page<Review> page = service.listByPage(pageNum, sortField, sortDir,keyword);
+				@Param("keyword") String keyword) throws ProfessionalNotFoundException {
+		User user = serviceP.get(id);
+		Page<Review> page = service.listReviewsByProfessional(user,pageNum, sortField, sortDir,keyword);
 		List<Review> listAllReviews = page.getContent();
 		List<Review> listReviews = new ArrayList<Review>();
 		for(Review review : listAllReviews) {	

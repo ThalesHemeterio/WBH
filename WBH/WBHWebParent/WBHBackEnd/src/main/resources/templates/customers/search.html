@@ -22,7 +22,7 @@
         <!-- Section to be filled-->
         <!-- Filter -->
 	<div class="text-center">
-		<form th:action="@{customers/search/page/1}" class="form-inline m-3">
+		<form th:action="@{/customers/search/page/1}" class="form-inline m-3">
 			<input type="hidden" name="sortField" th:value="${sortField}" />
 			<input type="hidden" name="sortDir" th:value="${sortDir}" />
 			Filter:&nbsp;
@@ -68,10 +68,7 @@
                                 <div class="row">
                                     <div class="output col-12">
                                         <h6>Description: </h6>
-                                        <h6>[[${sessionn.description}]]</h6>
-                                        
-										
-										
+                                        <h6>[[${sessionn.description}]]</h6>	
                                     </div>
                                     &nbsp;
                                 </div>
@@ -172,6 +169,9 @@
 			
 		});
 		
+		function clearFilter(){
+			window.location = "[[@{/customers/search}]]";
+		}
 	</script>
 
 </body>

@@ -40,11 +40,9 @@ public class SessionController {
 	@Autowired CategoryService serviceCat;
 	@Autowired RoleRepository roleRepo;
 	
-	@GetMapping("/admin/sessions")
-	public String listfirstPage(Model model) {
-		return listByPage(1,model, "id", "desc",null);
-	}
+	/********** UNREGISTERED USER SECTION **********/
 	
+	//displays search page to unregistred users
 	@GetMapping("/search")
 	public String listfirstPageSearch(Model model) {
 		return listfirstPageSearch(1,model, "id", "desc",null);
@@ -82,6 +80,15 @@ public class SessionController {
 		return "search";
 	}
 	
+	/********** ADMIN USER SECTION **********/
+	
+	//list all sessions to Admin user
+	@GetMapping("/admin/sessions")
+	public String listfirstPage(Model model) {
+		return listByPage(1,model, "id", "desc",null);
+	}
+	
+	//list all sessions to Admin user using pagination
 	@GetMapping("/admin/sessions/page/{pageNum}")
 	public String listByPage(
 				@PathVariable(name="pageNum") int pageNum, Model model, 
@@ -113,6 +120,7 @@ public class SessionController {
 		return "admin/sessions/sessions";
 	}
 	
+	//creates new session by Admin user
 	@GetMapping("/admin/sessions/new")
 	public String newSession(Model model) {
 		Session session = new Session();
@@ -145,6 +153,7 @@ public class SessionController {
 		return "admin/sessions/session_form";
 	}
 	
+	//saves a new session created by Admin user
 	@PostMapping("/admin/sessions/save")
 	public String saveSession(Session session, RedirectAttributes redirectAttributes) {
 		System.out.println(session);
@@ -154,11 +163,13 @@ public class SessionController {
 		return getRedirectURLtoAffectedSession(session);
 	}
 
+	//redirects to all sessions page filtering by the new session created
 	private String getRedirectURLtoAffectedSession(Session session) {
 		String name = session.getName();
 		return "redirect:/admin/sessions/page/1?sortField=id&sortDir=asc&keyword="+ name;
 	}
 	
+	//edits a session - Admin user
 	@GetMapping("/admin/session/edit/{id}")
 	public String editSession(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {
@@ -179,6 +190,7 @@ public class SessionController {
 		return "redirect:/admin/sessions";
 	}
 	
+	//deletes a session - Admin user
 	@GetMapping("/admin/session/delete/{id}")
 	public String deleteSession(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {
@@ -190,6 +202,19 @@ public class SessionController {
 		return "redirect:/admin/sessions";
 	}
 	
+	//updates session status - Admin user
+	@GetMapping("/admin/sessions/{id}/enabled/{status}")
+	public String updateSessionEnabledStatus(@PathVariable(name="id") Integer id, @PathVariable(name="status") boolean enabled, RedirectAttributes redirectAttributes) {
+		service.updateSessionEnabledStatus(id, enabled);
+		String status = enabled ?"enabled" :"disabled";
+		String message ="The Session Id " + id + " has been " + status;
+		redirectAttributes.addFlashAttribute("message", message);
+		return "redirect:/admin/sessions";
+	}
+	
+	/********** PROFESSIONAL USER SECTION **********/
+	
+	//deletes a session - professional user
 	@GetMapping("/professionals/session/delete/{id}")
 	public String deleteSessionProfessional(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {
@@ -201,30 +226,23 @@ public class SessionController {
 		return "redirect:/professionals/sessions";
 	}
 	
-	@GetMapping("/admin/sessions/{id}/enabled/{status}")
-	public String updateSessionEnabledStatus(@PathVariable(name="id") Integer id, @PathVariable(name="status") boolean enabled, RedirectAttributes redirectAttributes) {
-		service.updateSessionEnabledStatus(id, enabled);
-		String status = enabled ?"enabled" :"disabled";
-		String message ="The Session Id " + id + " has been " + status;
-		redirectAttributes.addFlashAttribute("message", message);
-		return "redirect:/admin/sessions";
-	}
-	
+	//get all the sessions
 	@GetMapping("/professionals/sessions")
 	public String listByPageSearchProfessionals(@AuthenticationPrincipal WBHUserDetails loggedUser,Model model) {
 		String email = loggedUser.getUsername();
 		User user = serviceP.getByEmail(email);
 		model.addAttribute("user", user);
-		return listfirstPageSearchProfessionals(user,1,model, "id", "desc",null);
+		return listfirstPageSearchProfessionals(loggedUser,1,model, "id", "desc",null);
 	}
 	
 	@GetMapping("/professionals/sessions/page/{pageNum}")
-	public String listfirstPageSearchProfessionals(User user,
+	public String listfirstPageSearchProfessionals(@AuthenticationPrincipal WBHUserDetails loggedUser,
 				@PathVariable(name="pageNum") int pageNum, Model model, 
 				@Param("sortField") String sortField, @Param("sortDir") String sortDir,
 				@Param("keyword") String keyword) {
-		//Integer prof_id = user.getId();
-		Page<Session> page = service.listByPage(pageNum, sortField, sortDir,keyword);
+		String email = loggedUser.getUsername();
+		User user = serviceP.getByEmail(email);
+		Page<Session> page = service.listByPageByProfessional(pageNum, sortField, sortDir,user,keyword);
 		List<Session> listAllSessions = page.getContent();
 		List<Session> listSessions = new ArrayList<Session>();
 		for(Session session : listAllSessions) {	
@@ -256,8 +274,7 @@ public class SessionController {
 		return "professionals/sessions_professional";
 	}
 	
-	//professionals search
-	
+	//professionals search dosplaying only sessions not booked
 	@GetMapping("/professionals/search")
 	public String listfirstPageSearchProfessional(Model model) {
 		return listByPageSearchProfessional(1,model, "id", "desc",null);
@@ -268,7 +285,7 @@ public class SessionController {
 				@PathVariable(name="pageNum") int pageNum, Model model, 
 				@Param("sortField") String sortField, @Param("sortDir") String sortDir,
 				@Param("keyword") String keyword) {
-		Page<Session> page = service.listByPage(pageNum, sortField, sortDir,keyword);
+		Page<Session> page = service.listByPageAndCustomer(pageNum, sortField, sortDir,keyword);
 		List<Session> listSessions = page.getContent();
 		List<User> listUsers = serviceP.listAll();
 		List<User> listProfessionals = serviceP.listAll();
@@ -303,6 +320,7 @@ public class SessionController {
 		return "professionals/search";
 	}
 	
+	//creates e new session by professional user
 	@GetMapping("/professionals/session_form")
 	public String newSessionProfessional(Model model,@AuthenticationPrincipal WBHUserDetails loggedUser) {
 		Session session = new Session();
@@ -317,6 +335,7 @@ public class SessionController {
 		return "professionals/session_form";
 	}
 	
+	//save new session by porfessional user
 	@PostMapping("/professionals/session_form/save")
 	public String saveSessionprofessional(Session session, RedirectAttributes redirectAttributes) {
 		System.out.println(session);
@@ -326,6 +345,7 @@ public class SessionController {
 		return "redirect:/professionals/sessions";
 	}
 	
+	//edit session by professional user
 	@GetMapping("/professionals/session/edit/{id}")
 	public String editSessionProfessional(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes,@AuthenticationPrincipal WBHUserDetails loggedUser) {
 		try {
@@ -347,31 +367,25 @@ public class SessionController {
 		return "redirect:/professionals/sessions";
 	}
 	
+	/********** CUSTOMER USER SECTION **********/
 	
-	//customers search
-	
+	//gets all the sessions book by the customer user
 	@GetMapping("/customers/sessions")
 	public String listfirstPageSearchCustomers(@AuthenticationPrincipal WBHUserDetails loggedUser,Model model) {
-		String email = loggedUser.getUsername();
-		User user = serviceP.getByEmail(email);
-		model.addAttribute("user", user);
-		return listByPageSearchCustomers(user,1,model, "id", "desc",null);
+		return listByPageSearchCustomers(loggedUser,1,model, "id", "desc",null);
 	}
 	
+	//gets all the sessions book by the customer user with pagination
 	@GetMapping("/customers/sessions/page/{pageNum}")
-	public String listByPageSearchCustomers(User user,
+	public String listByPageSearchCustomers(@AuthenticationPrincipal WBHUserDetails loggedUser,
 				@PathVariable(name="pageNum") int pageNum, Model model, 
 				@Param("sortField") String sortField, @Param("sortDir") String sortDir,
 				@Param("keyword") String keyword) {
-		//Integer prof_id = user.getId();
-		Page<Session> page = service.listByPage(pageNum, sortField, sortDir,keyword);
-		List<Session> listAllSessions = page.getContent();
-		List<Session> listSessions = new ArrayList<Session>();
-		for(Session session : listAllSessions) {	
-			if((session.getCustomer()== user)) {
-				listSessions.add(session);
-			}
-		}
+		String email = loggedUser.getUsername();
+		User user = serviceP.getByEmail(email);
+		model.addAttribute("user", user);
+		Page<Session> page = service.listByPageAndCustomerBooked(user, pageNum, sortField, sortDir,keyword);
+		List<Session> listSessions = page.getContent();
 		
 		long startCount =(pageNum-1)*SessionService.USERS_PER_PAGE+1;
 		long endCount = startCount+SessionService.USERS_PER_PAGE-1;
@@ -396,25 +410,19 @@ public class SessionController {
 		return "customers/sessions_customer";
 	}
 	
+	//search for user customers
 	@GetMapping("/customers/search")
 	public String listfirstPageSearchCustomer(Model model) {
 		return listByPageSearchCustomer(1,model, "id", "desc",null);
 	}
-	
+	//search for user customers with pagination
 	@GetMapping("/customers/search/page/{pageNum}")
 	public String listByPageSearchCustomer(
 				@PathVariable(name="pageNum") int pageNum, Model model, 
 				@Param("sortField") String sortField, @Param("sortDir") String sortDir,
 				@Param("keyword") String keyword) {
-		Page<Session> page = service.listByPage(pageNum, sortField, sortDir,keyword);
-		List<Session> listAllSessions = page.getContent();
-		List<Session> listSessions = new ArrayList<Session>();;
-		for(Session session : listAllSessions) {	
-			if(session.getCustomer()== null) {
-				listSessions.add(session);
-			}
-		}
-		
+		Page<Session> page = service.listByPageAndCustomer(pageNum, sortField, sortDir,keyword);
+		List<Session> listSessions = page.getContent();
 		List<User> listUsers = serviceP.listAll();
 		List<User> listProfessionals = serviceP.listAll();
 		listProfessionals.clear();
@@ -447,9 +455,9 @@ public class SessionController {
 		
 		return "customers/search";
 	}
-	//cancel booking
 	
-	@GetMapping("/customers/session/cancelbooking/{id}")
+	//cancel booking by customer user
+	@GetMapping("/customers/search/cancelbooking/{id}")
 	public String cancelBookingCustomer(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {
 			Session session = service.get(id);
@@ -462,6 +470,7 @@ public class SessionController {
 		return "redirect:/customers/sessions";
 	}
 	
+	//booning session by customer user
 	@GetMapping("/customers/search/booking/{id}")
 	public String bookingCustomer(@AuthenticationPrincipal WBHUserDetails loggedUser,@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		try {

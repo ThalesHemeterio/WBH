@@ -8,6 +8,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 
 import com.wbh.common.entity.Session;
+import com.wbh.common.entity.User;
 
 public interface SessionRepository extends PagingAndSortingRepository<Session, Integer> {
 
@@ -24,4 +25,12 @@ public interface SessionRepository extends PagingAndSortingRepository<Session, I
 	public void updateEnableStatus(Integer id, boolean enabled);
 
 	public Session findByName(String name);
+	
+	public Page<Session> findSessionByProfessional(User professional, Pageable pageable);
+	
+	public Page<Session> findSessionByCustomer(User client, Pageable pageable);
+	
+	public Page<Session> findSessionByCustomerAndDescriptionOrNameOrProfessionalFirstNameOrCategoriesName(User user, String description, String name, String professional, String categories, Pageable pageable);
+
+	public Page<Session> findSessionByCustomerAndDescriptionOrCustomerAndNameOrCustomerAndProfessionalFirstNameOrCustomerAndCategoriesName(User user, String description, User user2, String name,User user3, String professional,User user4, String categories, Pageable pageable);
 }

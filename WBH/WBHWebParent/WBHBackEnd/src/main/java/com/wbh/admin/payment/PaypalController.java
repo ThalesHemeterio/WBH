@@ -58,6 +58,6 @@ public class PaypalController {
 			System.out.println(e.getMessage());
 		}	
 		return "redirect:/customers/search";
-	}
+	}	
 	
 }

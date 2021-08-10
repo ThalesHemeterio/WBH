@@ -65,8 +65,40 @@
             </div> 
         </div>
         <!-- End of Section to be filled-->
-
     </div>
+    
+    <!-- Pagination -->
+	<div class="text-center m-1"  th:if="${totalItems >0}">
+		<span> Showing reviews [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+	</div>
+	<div class="text-center m-1"  th:unless="${totalItems >0}">
+		<span> No Reviwes Found</span>
+	</div>
+	<div th:if="${totalPages > 1}">
+	<nav>
+  		<ul class="pagination justify-content-center flex-wrap">
+		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link9(1, 'First')"></a>
+		    </li>
+		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link9(${currentPage-1}, 'Previous')"></a>
+		    </li>
+		    
+		    <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" 
+		    	th:each="i : ${#numbers.sequence(1,totalPages)}">
+		    	<a th:replace="fragmentsAdmin :: page_link9(${i}, ${i})"></a>
+		    </li>
+		    
+		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link9(${currentPage+1}, 'Next')"></a>
+		    </li>
+		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link9(${totalPages}, 'Last')"></a>
+		    </li>
+ 	 	</ul>
+	</nav>
+	</div>
+	<!-- End of Pagination -->
     
  <!-- Alert delete confirmation -->
 	<div class="modal" id="confirmModal">

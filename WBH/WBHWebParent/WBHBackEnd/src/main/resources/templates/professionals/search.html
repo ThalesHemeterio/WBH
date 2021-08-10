@@ -20,7 +20,7 @@
         <!-- Section to be filled-->
         <!-- Filter -->
 	<div class="text-center">
-		<form th:action="@{professionals/search/page/1}" class="form-inline m-3">
+		<form th:action="@{/professionals/search/page/1}" class="form-inline m-3">
 			<input type="hidden" name="sortField" th:value="${sortField}" />
 			<input type="hidden" name="sortDir" th:value="${sortDir}" />
 			Filter:&nbsp;
@@ -46,23 +46,30 @@
                         <div class="col-9">
                             <form action="index.html" onsubmit="index.html">
                                 <div class="row">
-                                    <div class="output col-8">
-                                        <h5>[[${sessionn.professional}]]</h5>
+                                    <div class="output col-7">
+                                        <h3>[[${sessionn.professional}]]</h3>
                                     </div>
-                                    <div class="output col-4">
+                                    <div class="output col-5">
                                         <h5>Category: [[${sessionn.categories}]]</h5>
                                     </div>
                                 </div>
                                 
                                 <div class="row">
-                                    <div class="output col-8">
-                                        <h5>Session duration: [[${sessionn.duration}]] min</h5>
+                                    <div class="output col-7">
+                                        <h5>Session duration: [[${sessionn.duration}]]</h5>
                                     </div>
-                                    <div class="output col-4">
+                                    <div class="output col-5">
                                         <h5>Price: &euro; [[${sessionn.price}]] </h5>
                                     </div>
                                 </div>
-                               
+                               <div class="row">
+                                    <div class="output col-7">
+                                        <h6>Professional email: [[${sessionn.professional.email}]]</h6>
+                                    </div>
+                                    <div class="output col-5">
+                                        <h6>Contact: (+353) [[${sessionn.professional.contact}]] </h6>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="output col-12">
                                         <h6>Description: </h6>
@@ -72,10 +79,10 @@
                                 </div>
                                 <div class="row">
                                 &nbsp;
-                                    <div class="output col-8">
+                                    <div class="output col-7">
                                         <h6>Please Check availability: </h6>
                                     </div>
-                                    <div class="output col-4">
+                                    <div class="output col-5">
                                         <select>
                                             <option value="">Select a session</option>
                                             <option value="option">Date:[[${sessionn.date}]] Time: [[${sessionn.startTime}]]</option>
@@ -109,22 +116,22 @@
 	<nav>
   		<ul class="pagination justify-content-center flex-wrap">
 		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragmentsAdmin :: page_link7(1, 'First')"></a>
+		    	<a th:replace="fragmentsAdmin :: page_link6(1, 'First')"></a>
 		    </li>
 		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragmentsAdmin :: page_link7(${currentPage-1}, 'Previous')"></a>
+		    	<a th:replace="fragmentsAdmin :: page_link6(${currentPage-1}, 'Previous')"></a>
 		    </li>
 		    
 		    <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" 
 		    	th:each="i : ${#numbers.sequence(1,totalPages)}">
-		    	<a th:replace="fragmentsAdmin :: page_link7(${i}, ${i})"></a>
+		    	<a th:replace="fragmentsAdmin :: page_link6(${i}, ${i})"></a>
 		    </li>
 		    
 		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragmentsAdmin :: page_link7(${currentPage+1}, 'Next')"></a>
+		    	<a th:replace="fragmentsAdmin :: page_link6(${currentPage+1}, 'Next')"></a>
 		    </li>
 		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-		    	<a th:replace="fragmentsAdmin :: page_link7(${totalPages}, 'Last')"></a>
+		    	<a th:replace="fragmentsAdmin :: page_link6(${totalPages}, 'Last')"></a>
 		    </li>
  	 	</ul>
 	</nav>
@@ -169,6 +176,9 @@
 			
 		});
 		
+		function clearFilter(){
+			window.location = "[[@{/professionals/search}]]";
+		}
 	</script>
 
 </body>

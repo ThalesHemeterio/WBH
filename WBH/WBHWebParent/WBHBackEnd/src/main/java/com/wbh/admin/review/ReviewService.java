@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.wbh.admin.professional.ProfessionalNotFoundException;
 import com.wbh.common.entity.Review;
 import com.wbh.common.entity.Session;
+import com.wbh.common.entity.User;
 
 @Service
 @Transactional
@@ -64,5 +65,30 @@ public class ReviewService {
 			} catch (NoSuchElementException ex) {
 				throw new ReviewNotFoundException("Could not find any review with ID: "+ id);
 			}
+		}
+		
+		public Page<Review> listCustomerReviwesByPage(int pageNum, String sortField, String sortDir, User keyword){
+			Sort sort = Sort.by(sortField);	
+			sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+			
+			Pageable pageable = PageRequest.of(pageNum -1, USERS_PER_PAGE, sort);
+			
+			if(keyword !=null) {
+				return repo.findReviewByCustomer(keyword, pageable);
+			}
+			return repo.findAll(pageable);
+		}
+		
+		
+		public Page<Review> listReviewsByProfessional(User professional,int pageNum, String sortField, String sortDir, String keyword){
+			Sort sort = Sort.by(sortField);	
+			sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+			
+			Pageable pageable = PageRequest.of(pageNum -1, USERS_PER_PAGE, sort);
+			boolean enabled = true;
+			if(professional !=null) {
+				return repo.findReviewByProfessionalAndEnabled(professional, enabled,pageable);
+			}
+			return repo.findAll(pageable);
 		}
 }

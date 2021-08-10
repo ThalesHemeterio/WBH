@@ -6,10 +6,11 @@
 	<div th:replace="navigation2 :: menu"></div>
 	<div th:replace="navigation2 :: social_menu"></div>
 	<!-- Content -->
-	<div>
-		<h2 class="text-center m-3">Your Account Details</h2>
-		<div class="border-top border-dark w-50 mx-auto my-3"></div>
-	</div>
+  <div class="col-12 text-center mt-4">
+            <h1 class="display-4 pt-4">Your Account Details</h1>
+            <div class="border-top border-dark w-50 mx-auto my-3"></div>
+            <p class="lead">Manage your account details.</p>
+        </div>
 		<div th:if="${message != null}" class=" alert alert-success text-center">
 		[[${message}]]
 	</div>

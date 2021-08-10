@@ -28,7 +28,7 @@ public class Session {
 	@Column(length = 240, nullable = false, unique = true)
 	private String name;
 	
-	@Column(length = 64, nullable = false)
+	@Column(length = 560, nullable = false)
 	private String description;
 	
 	@Column(name = "created_time", nullable = false)

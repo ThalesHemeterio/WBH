@@ -32,6 +32,7 @@ public class UserController {
 		@Autowired
 		private RoleRepository roleRepo;
 		
+		// List all Users for Admin side
 		@GetMapping("/admin/users")
 		public String listfirstPage(Model model) {
 			return listByPage(1,model, "firstName", "asc",null);
@@ -67,6 +68,7 @@ public class UserController {
 			return "admin/users/users";
 		}
 		
+		//creates a new user Admin side
 		@GetMapping("/admin/users/new")
 		public String newUser(Model model) {
 			List<Role> listRoles = service.listRoles();
@@ -78,6 +80,7 @@ public class UserController {
 			return "admin/users/user_form";
 		}
 		
+		//save new user Admin side
 		@PostMapping("/admin/users/save")
 		public String saveUser(User user, RedirectAttributes redirectAttributes, 
 				@RequestParam("image") MultipartFile multipartFile ) throws IOException {
@@ -97,11 +100,13 @@ public class UserController {
 			return getRedirectURLtoAffectedUser(user);
 		}
 
+		//redirect to all users page but filtering by new user - admin side
 		private String getRedirectURLtoAffectedUser(User user) {
 			String firstPartOfEmail = user.getEmail().split("@")[0];
 			return "redirect:/admin/users/page/1?sortField=id&sortDir=asc&keyword="+ firstPartOfEmail;
 		}
 		
+		// edit user Admin side
 		@GetMapping("/admin/user/edit/{id}")
 		public String editUser(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 			try {
@@ -117,6 +122,7 @@ public class UserController {
 			return "redirect:/admin/users";
 		}
 		
+		//delete User Admin side
 		@GetMapping("/admin/user/delete/{id}")
 		public String deleteUser(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 			try {
@@ -128,6 +134,7 @@ public class UserController {
 			return "redirect:/admin/users";
 		}
 		
+		//Change enabled status Admin side -  approve professionals registration
 		@GetMapping("/admin/users/{id}/enabled/{status}")
 		public String updateUserEnabledStatus(@PathVariable(name="id") Integer id, @PathVariable(name="status") boolean enabled, RedirectAttributes redirectAttributes) {
 			service.updateUserEnabledStatus(id, enabled);

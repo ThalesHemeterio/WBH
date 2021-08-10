@@ -7,10 +7,11 @@
 	<div th:replace="navigation2 :: social_menu"></div>
 
 	<!-- Content -->
-	<div>
-		<h2 class="text-center m-3">Manage Reviews - [[${pageTitle}]]</h2>
-		<div class="border-top border-dark w-50 mx-auto my-3"></div>
-	</div>
+	  <div class="col-12 text-center mt-4">
+            <h1 class="display-4 pt-4">Manage Reviews</h1>
+            <div class="border-top border-dark w-50 mx-auto my-3"></div>
+            <p class="lead">[[${pageTitle}]]</p>
+        </div>
 		<div th:if="${message != null}" class=" alert alert-success text-center">
 		[[${message}]]
 	</div>

@@ -31,180 +31,194 @@ import com.wbh.common.entity.User;
 import com.wbh.admin.setting.EmailSettingBag;
 import com.wbh.admin.setting.SettingService;
 
-
 @Controller
 public class ProfessionalController {
 
 	@Autowired
 	private ProfessionalService service;
-	@Autowired private SettingService settingService;
-	
-	@Autowired RoleRepository roleRepo;
-	
+	@Autowired
+	private SettingService settingService;
+	@Autowired
+	RoleRepository roleRepo;
+
+	/********** ADMIN USER SECTION **********/
+
+	// list all user professionals Admin Side
 	@GetMapping("/admin/professionals")
 	public String listfirstPage(Model model) {
-		return listByPage(1,model, "firstName", "asc",null);
+		return listByPage(1, model, "firstName", "asc", null);
 	}
-	
+
 	@GetMapping("/admin/professionals/page/{pageNum}")
-	public String listByPage(
-				@PathVariable(name="pageNum") int pageNum, Model model, 
-				@Param("sortField") String sortField, @Param("sortDir") String sortDir,
-				@Param("keyword") String keyword) {
-		Page<User> page = service.listByPage(pageNum, sortField, sortDir,keyword);
-		List<User> listProfessionals = page.getContent();
+	public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
+			@Param("sortField") String sortField, @Param("sortDir") String sortDir, @Param("keyword") String keyword) {
 		Role roleProfessional = roleRepo.getRoleById(3);
-		long startCount =(pageNum-1)*ProfessionalService.USERS_PER_PAGE+1;
-		long endCount = startCount+ProfessionalService.USERS_PER_PAGE-1;
-		if(endCount >page.getTotalElements()) {
+		Page<User> page = service.listByPageByRole(pageNum, sortField, sortDir, keyword, roleProfessional);
+		List<User> listProfessionals = page.getContent();
+		long startCount = (pageNum - 1) * ProfessionalService.USERS_PER_PAGE + 1;
+		long endCount = startCount + ProfessionalService.USERS_PER_PAGE - 1;
+		if (endCount > page.getTotalElements()) {
 			endCount = page.getTotalElements();
 		}
-		
+
 		String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
-		
-		//passing the attributes to the view
+
+		// passing the attributes to the view
 		model.addAttribute("currentPage", pageNum);
 		model.addAttribute("totalPages", page.getTotalPages());
 		model.addAttribute("startCount", startCount);
 		model.addAttribute("endCount", endCount);
-		model.addAttribute("totalItems",page.getTotalElements());
-		model.addAttribute("roleProfessional",roleProfessional);
-		model.addAttribute("listProfessionals",listProfessionals);
-		model.addAttribute("sortField",sortField);
-		model.addAttribute("sortDir",sortDir);
-		model.addAttribute("reverseSortDir",reverseSortDir);
+		model.addAttribute("totalItems", page.getTotalElements());
+		model.addAttribute("roleProfessional", roleProfessional);
+		model.addAttribute("listProfessionals", listProfessionals);
+		model.addAttribute("sortField", sortField);
+		model.addAttribute("sortDir", sortDir);
+		model.addAttribute("reverseSortDir", reverseSortDir);
 		model.addAttribute("keyword", keyword);
-		
+
 		return "admin/professionals/professionals";
 	}
-	
+
+	// creates new professional user Admin side
 	@GetMapping("/admin/professionals/new")
 	public String newCustomer(Model model) {
 		Role listRoles = roleRepo.getRoleById(3);
 		User professional = new User();
 		professional.setEnabled(false);
-		model.addAttribute("professional",professional);
-		model.addAttribute("listRoles",listRoles);
+		model.addAttribute("professional", professional);
+		model.addAttribute("listRoles", listRoles);
 		model.addAttribute("pageTitle", "Create new Professional");
 		return "admin/professionals/professional_form";
 	}
-	
+
+	// save new professional user Admin side
 	@PostMapping("/admin/professionals/save")
-	public String saveProfessional(User professional, RedirectAttributes redirectAttributes, 
-			@RequestParam("image") MultipartFile multipartFile ) throws IOException {
+	public String saveProfessional(User professional, RedirectAttributes redirectAttributes,
+			@RequestParam("image") MultipartFile multipartFile) throws IOException {
 		System.out.println(professional);
-		if(!multipartFile.isEmpty()) {
+		if (!multipartFile.isEmpty()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 			professional.setPhotos(fileName);
 			User savedProfessional = service.save(professional);
-			String uploadDir = "user-photos/"+savedProfessional.getId();
+			String uploadDir = "user-photos/" + savedProfessional.getId();
 			FileUploadUtil.cleanDirectory(uploadDir);
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-		}else {
-			if(professional.getPhotos().isEmpty()) professional.setPhotos(null);
+		} else {
+			if (professional.getPhotos().isEmpty())
+				professional.setPhotos(null);
 			service.save(professional);
 		}
-		redirectAttributes.addFlashAttribute("message", "The Professional has been saved successfully.");	
+		redirectAttributes.addFlashAttribute("message", "The Professional has been saved successfully.");
 		return getRedirectURLtoAffectedProfessional(professional);
 	}
 
+	// redirect to all professionals page filtering by the new user professional
+	// entry Admin side
 	private String getRedirectURLtoAffectedProfessional(User professional) {
-		String firstPartOfEmail = professional.getEmail().split("@")[0];
-		return "redirect:/admin/professionals/page/1?sortField=id&sortDir=asc&keyword="+ firstPartOfEmail;
+		String firstPartOfEmail = professional.getFirstName();
+		return "redirect:/admin/professionals/page/1?sortField=id&sortDir=asc&keyword=" + firstPartOfEmail;
 	}
-	
+
+	// edit user professional Admin side
 	@GetMapping("/admin/professional/edit/{id}")
-	public String editProfessional(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+	public String editProfessional(@PathVariable(name = "id") Integer id, Model model,
+			RedirectAttributes redirectAttributes) {
 		try {
 			User professional = service.get(id);
 			Role listRoles = roleRepo.getRoleById(3);
 			model.addAttribute("professional", professional);
-			model.addAttribute("pageTitle", "Edit Professional (ID: "+ id+")");
-			model.addAttribute("listRoles",listRoles);
+			model.addAttribute("pageTitle", "Edit Professional (ID: " + id + ")");
+			model.addAttribute("listRoles", listRoles);
 			return "admin/professionals/professional_form";
-		} catch(ProfessionalNotFoundException ex){
+		} catch (ProfessionalNotFoundException ex) {
 			redirectAttributes.addFlashAttribute("message", ex.getMessage());
 		}
 		return "redirect:/admin/professionals";
 	}
-	
+
+	// delete user porfessional Admin side
 	@GetMapping("/admin/professional/delete/{id}")
-	public String deleteProfessional(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+	public String deleteProfessional(@PathVariable(name = "id") Integer id, Model model,
+			RedirectAttributes redirectAttributes) {
 		try {
 			service.delete(id);
-			redirectAttributes.addFlashAttribute("message", "The professional "+ id + " has been deleted successfully");
-		} catch(ProfessionalNotFoundException ex){
+			redirectAttributes.addFlashAttribute("message",
+					"The professional " + id + " has been deleted successfully");
+		} catch (ProfessionalNotFoundException ex) {
 			redirectAttributes.addFlashAttribute("message", ex.getMessage());
 		}
 		return "redirect:/admin/professionals";
 	}
-	
+
+	// change user professional enabled status Admin side
 	@GetMapping("/admin/professionals/{id}/enabled/{status}")
-	public String updateProfessionalEnabledStatus(@PathVariable(name="id") Integer id, @PathVariable(name="status") boolean enabled, RedirectAttributes redirectAttributes) {
+	public String updateProfessionalEnabledStatus(@PathVariable(name = "id") Integer id,
+			@PathVariable(name = "status") boolean enabled, RedirectAttributes redirectAttributes) {
 		service.updateProfessionalEnabledStatus(id, enabled);
-		String status = enabled ?"enabled" :"disabled";
-		String message ="The Professional Id " + id + " has been " + status;
+		String status = enabled ? "enabled" : "disabled";
+		String message = "The Professional Id " + id + " has been " + status;
 		redirectAttributes.addFlashAttribute("message", message);
 		return "redirect:/admin/professionals";
 	}
-	
+
+	/********** UNREGISTERED USER SECTION **********/
+
+	// registering new user Professional - Unregistered user
 	@GetMapping("/register/register_professional")
 	public String showRegistrationProfessionalForm(Model model) {
-		model.addAttribute("pageTitle","Professional Registration");
+		model.addAttribute("pageTitle", "Professional Registration");
 		model.addAttribute("professional", new User());
-		
 		return "register/register_professional_form";
 	}
-	
+
+	// saving new user Professional -Unregistered user
 	@PostMapping("/create_professional")
-	public String creatProfessional(User professional, Model model,
-			HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
+	public String creatProfessional(User professional, Model model, HttpServletRequest request)
+			throws UnsupportedEncodingException, MessagingException {
 		boolean isUnique = service.isEmailUnique(professional.getId(), professional.getEmail());
-		if(isUnique) {
-		service.registerProfessional(professional);
-		Role Role = roleRepo.getRoleById(2);
-		professional.addRole(Role);
-		sendVerificationEmail(request,professional);
-		
-		model.addAttribute("pageTitle","Registration Succeeded");
-		return "/register/register_success";
-		}else {
-			model.addAttribute("pageTitle","Registration Failed");
+		if (isUnique) {
+			service.registerProfessional(professional);
+			Role Role = roleRepo.getRoleById(2);
+			professional.addRole(Role);
+			sendVerificationEmail(request, professional);
+			model.addAttribute("pageTitle", "Registration Succeeded");
+			return "/register/register_success";
+		} else {
+			model.addAttribute("pageTitle", "Registration Failed");
 			return "redirect:register/register_professional";
 		}
 	}
-		
-	
-	private void sendVerificationEmail(HttpServletRequest request, User professional) throws UnsupportedEncodingException, MessagingException {
+
+	// send verification email to new user professional registration Unregistered
+	// User
+	private void sendVerificationEmail(HttpServletRequest request, User professional)
+			throws UnsupportedEncodingException, MessagingException {
 		EmailSettingBag emailSettings = settingService.getEmailSettings();
 		JavaMailSenderImpl mailSender = Utility.prepareMailSender(emailSettings);
-		
+
 		String toAddress = professional.getEmail();
 		String subject = emailSettings.getCustomerVerifySubject();
 		String content = emailSettings.getCustomerVerifyContent();
-		
+
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
-		
-		helper.setFrom(emailSettings.getFromAddress(),emailSettings.getSenderName());
+
+		helper.setFrom(emailSettings.getFromAddress(), emailSettings.getSenderName());
 		helper.setTo(toAddress);
 		helper.setSubject(subject);
-		
+
 		content = content.replace("[[name]]", professional.getFullName());
-		
-		String verifyURL = Utility.getSiteURL(request)+ "/verify_p?code=" +professional.getVerificationCode();
-		
+		String verifyURL = Utility.getSiteURL(request) + "/verify_p?code=" + professional.getVerificationCode();
 		content = content.replace("[[URL]]", verifyURL);
-		
-		helper.setText(content,true);
-		
+		helper.setText(content, true);
 		mailSender.send(message);
-		
-		System.out.println("to address:"+ toAddress);
-		System.out.println("Verify URL:"+ verifyURL);
-		
+
+		System.out.println("to address:" + toAddress);
+		System.out.println("Verify URL:" + verifyURL);
+
 	}
-	
+
+	// verifying process Unregistered User
 	@GetMapping("/verify_p")
 	public String verifyAccount(@Param("code") String code, Model model) {
 		boolean verified = service.verify(code);

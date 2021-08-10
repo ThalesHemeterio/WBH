@@ -9,6 +9,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.wbh.common.entity.Role;
 import com.wbh.common.entity.User;
 
 public interface CustomerRepository extends PagingAndSortingRepository<User, Integer> {
@@ -21,12 +22,12 @@ public interface CustomerRepository extends PagingAndSortingRepository<User, Int
 	
 	@Query("UPDATE User u SET u.enabled = true WHERE u.id =?1")
 	@Modifying
-	public User enable(Integer id);
+	public User enable(Integer id); // used to update enable status
 	
 	@Query("SELECT u FROM User u WHERE u.email = :email")
 	public User getCustomerByEmail(@Param("email") String email);
 	
-	public Long countById(Integer id);  // method use to delete users
+	public Long countById(Integer id);  // used to delete users
 	
 	@Query("SELECT u FROM User u WHERE CONCAT(u.id, ' ', u.email, ' ', u.firstName, ' ',u.lastName) LIKE %?1%")
 	public Page<User> findAll(String keyword, Pageable pageable);
@@ -34,5 +35,9 @@ public interface CustomerRepository extends PagingAndSortingRepository<User, Int
 	@Query("UPDATE User u SET u.enabled =?2 WHERE u.id = ?1")
 	@Modifying
 	public void updateEnableStatus(Integer id, boolean enabled);
+	
+	public Page<User> findUserByRolesAndFirstNameOrLastNameOrEmailAllIgnoreCase(Role role, String firstName, String lastName,String email, Pageable pageable); // returns users with role Customer
+	
+	public Page<User> findUserByRoles(Role role, Pageable pageable); // returns users with role Customer
 
 }

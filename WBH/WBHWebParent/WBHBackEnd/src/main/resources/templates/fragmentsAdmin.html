@@ -64,7 +64,22 @@
 				
 	<a th:fragment="page_link7(pageNum, label)" class="page-link"
 		th:href="@{'/customers/search/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
-						
+
+	<a th:fragment="page_link8(pageNum, label)" class="page-link"
+		th:href="@{'/professionals/sessions/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
+	
+	<a th:fragment="page_link9(pageNum, label)" class="page-link"
+		th:href="@{'/professionals/reviews_professional/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
+
+<a th:fragment="page_link10(pageNum, label)" class="page-link"
+		th:href="@{'/customers/sessions/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
+
+<a th:fragment="page_link11(pageNum, label)" class="page-link"
+		th:href="@{'/customers/reviews_professional/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
+
+<a th:fragment="page_link12(pageNum, label)" class="page-link"
+		th:href="@{'/customers/reviews_customer/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' +${sortDir} + ${keyword !=null ? '&keyword=' + keyword : '' }}">[[${label}]]</a>
+																								
 	<div th:fragment="category_status" th:remove="tag">
 		<a th:if="${category.enabled == true}" class="fas fa-check-circle icon-green fa-2x" 
 			th:href="@{'/admin/categories/' + ${category.id} + '/enabled/false'}"

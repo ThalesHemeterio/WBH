@@ -31,184 +31,194 @@ import com.wbh.common.entity.User;
 import com.wbh.admin.setting.SettingService;
 import com.wbh.admin.setting.EmailSettingBag;
 
-
 @Controller
 public class CustomerController {
 
 	@Autowired
 	private CustomerService service;
-	@Autowired private SettingService settingService;
-	
-	@Autowired RoleRepository roleRepo;
-	
+	@Autowired
+	private SettingService settingService;
+	@Autowired
+	RoleRepository roleRepo;
+
+	/********** ADMIN USER SECTION **********/
+
+	// list all user customers Admin Side
 	@GetMapping("/admin/customers")
 	public String listfirstPage(Model model) {
-		return listByPage(1,model, "firstName", "asc",null);
+		return listByPage(1, model, "firstName", "asc", null);
 	}
-	
+
 	@GetMapping("/admin/customers/page/{pageNum}")
-	public String listByPage(
-				@PathVariable(name="pageNum") int pageNum, Model model, 
-				@Param("sortField") String sortField, @Param("sortDir") String sortDir,
-				@Param("keyword") String keyword) {
-		Page<User> page = service.listByPage(pageNum, sortField, sortDir,keyword);
-		List<User> listCustomers = page.getContent();
+	public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
+			@Param("sortField") String sortField, @Param("sortDir") String sortDir, @Param("keyword") String keyword) {
+
 		Role roleCustomer = roleRepo.getRoleById(2);
-		long startCount =(pageNum-1)*CustomerService.USERS_PER_PAGE+1;
-		long endCount = startCount+CustomerService.USERS_PER_PAGE-1;
-		if(endCount >page.getTotalElements()) {
+		Page<User> page = service.listByPageByRole(pageNum, sortField, sortDir, keyword, roleCustomer);
+		List<User> listCustomers = page.getContent();
+		long startCount = (pageNum - 1) * CustomerService.USERS_PER_PAGE + 1;
+		long endCount = startCount + CustomerService.USERS_PER_PAGE - 1;
+		if (endCount > page.getTotalElements()) {
 			endCount = page.getTotalElements();
 		}
-		
+
 		String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
-		
-		//passing the attributes to the view
+
+		// passing the attributes to the view
 		model.addAttribute("currentPage", pageNum);
 		model.addAttribute("totalPages", page.getTotalPages());
 		model.addAttribute("startCount", startCount);
 		model.addAttribute("endCount", endCount);
-		model.addAttribute("totalItems",page.getTotalElements());
-		model.addAttribute("roleCustomer",roleCustomer);
-		model.addAttribute("listCustomers",listCustomers);
-		model.addAttribute("sortField",sortField);
-		model.addAttribute("sortDir",sortDir);
-		model.addAttribute("reverseSortDir",reverseSortDir);
+		model.addAttribute("totalItems", page.getTotalElements());
+		model.addAttribute("roleCustomer", roleCustomer);
+		model.addAttribute("listCustomers", listCustomers);
+		model.addAttribute("sortField", sortField);
+		model.addAttribute("sortDir", sortDir);
+		model.addAttribute("reverseSortDir", reverseSortDir);
 		model.addAttribute("keyword", keyword);
-		
+
 		return "admin/customers/customers";
 	}
-	
+
+	// creates new customer user Admin side
 	@GetMapping("/admin/customers/new")
 	public String newCustomer(Model model) {
 		Role listRoles = roleRepo.getRoleById(2);
 		User customer = new User();
 		customer.setEnabled(true);
-		model.addAttribute("customer",customer);
-		model.addAttribute("listRoles",listRoles);
+		model.addAttribute("customer", customer);
+		model.addAttribute("listRoles", listRoles);
 		model.addAttribute("pageTitle", "Create new Client");
 		return "admin/customers/customer_form";
 	}
-	
+
+	// save new professional user Admin side
 	@PostMapping("/admin/customers/save")
-	public String saveCustomer(User customer, RedirectAttributes redirectAttributes, 
-			@RequestParam("image") MultipartFile multipartFile ) throws IOException {
+	public String saveCustomer(User customer, RedirectAttributes redirectAttributes,
+			@RequestParam("image") MultipartFile multipartFile) throws IOException {
 		System.out.println(customer);
-		if(!multipartFile.isEmpty()) {
+		if (!multipartFile.isEmpty()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 			customer.setPhotos(fileName);
 			User savedUser = service.save(customer);
-			String uploadDir = "user-photos/"+savedUser.getId();
+			String uploadDir = "user-photos/" + savedUser.getId();
 			FileUploadUtil.cleanDirectory(uploadDir);
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-		}else {
-			if(customer.getPhotos().isEmpty()) customer.setPhotos(null);
+		} else {
+			if (customer.getPhotos().isEmpty())
+				customer.setPhotos(null);
 			service.save(customer);
 		}
-		redirectAttributes.addFlashAttribute("message", "The Client has been saved successfully.");	
+		redirectAttributes.addFlashAttribute("message", "The Client has been saved successfully.");
 		return getRedirectURLtoAffectedCustomer(customer);
 	}
 
+	// redirect to all customers page filtering by the new user customer entry Admin
+	// side
 	private String getRedirectURLtoAffectedCustomer(User customer) {
 		String firstPartOfEmail = customer.getEmail().split("@")[0];
-		return "redirect:/admin/customers/page/1?sortField=id&sortDir=asc&keyword="+ firstPartOfEmail;
+		return "redirect:/admin/customers/page/1?sortField=id&sortDir=asc&keyword=" + firstPartOfEmail;
 	}
-	
+
+	// edit user customer Admin side
 	@GetMapping("/admin/customer/edit/{id}")
-	public String editCustomer(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+	public String editCustomer(@PathVariable(name = "id") Integer id, Model model,
+			RedirectAttributes redirectAttributes) {
 		try {
 			User customer = service.get(id);
 			Role listRoles = roleRepo.getRoleById(2);
-			model.addAttribute("listRoles",listRoles);
+			model.addAttribute("listRoles", listRoles);
 			model.addAttribute("customer", customer);
-			model.addAttribute("pageTitle", "Edit Client (ID: "+ id+")");
+			model.addAttribute("pageTitle", "Edit Client (ID: " + id + ")");
 			return "admin/customers/customer_form";
-		} catch(CustomerNotFoundException ex){
+		} catch (CustomerNotFoundException ex) {
 			redirectAttributes.addFlashAttribute("message", ex.getMessage());
 		}
 		return "redirect:/admin/customers";
 	}
-	
+
+	// delete user customer Admin side
 	@GetMapping("/admin/customer/delete/{id}")
-	public String deleteCustomer(@PathVariable(name="id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+	public String deleteCustomer(@PathVariable(name = "id") Integer id, Model model,
+			RedirectAttributes redirectAttributes) {
 		try {
 			service.delete(id);
-			redirectAttributes.addFlashAttribute("message", "The client "+ id + " has been deleted successfully");
-		} catch(CustomerNotFoundException ex){
+			redirectAttributes.addFlashAttribute("message", "The client " + id + " has been deleted successfully");
+		} catch (CustomerNotFoundException ex) {
 			redirectAttributes.addFlashAttribute("message", ex.getMessage());
 		}
 		return "redirect:/admin/customers";
 	}
-	
+
+	// change user customer enabled status Admin side
 	@GetMapping("/admin/customers/{id}/enabled/{status}")
-	public String updateCustomerEnabledStatus(@PathVariable(name="id") Integer id, @PathVariable(name="status") boolean enabled, RedirectAttributes redirectAttributes) {
+	public String updateCustomerEnabledStatus(@PathVariable(name = "id") Integer id,
+			@PathVariable(name = "status") boolean enabled, RedirectAttributes redirectAttributes) {
 		service.updateCustomerEnabledStatus(id, enabled);
-		String status = enabled ?"enabled" :"disabled";
-		String message ="The Client Id " + id + " has been " + status;
+		String status = enabled ? "enabled" : "disabled";
+		String message = "The Client Id " + id + " has been " + status;
 		redirectAttributes.addFlashAttribute("message", message);
 		return "redirect:/admin/customers";
 	}
-	
+
+	/********** UNREGISTERED USER SECTION **********/
+
+	// registering new user Customer - Unregistered user
 	@GetMapping("register/register_customer")
 	public String showRegistrationCustomerForm(Model model) {
-		model.addAttribute("pageTitle","Client Registration");
+		model.addAttribute("pageTitle", "Client Registration");
 		model.addAttribute("customer", new User());
-		
 		return "register/register_customer_form";
 	}
-	
-	@GetMapping("/customers/index")
-	public String showIndexforCustomer() {
-		return "customers/index";
-	}
-	
+
+	// saving new user customer -Unregistered user
 	@PostMapping("/create_customer")
-	public String creatCustomer(User customer, Model model,
-			HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
+	public String creatCustomer(User customer, Model model, HttpServletRequest request)
+			throws UnsupportedEncodingException, MessagingException {
 		boolean isUnique = service.isEmailUnique(customer.getId(), customer.getEmail());
-		if(isUnique) {
-		service.registerCustomer(customer);
-		Role Role = roleRepo.getRoleById(2);
-		customer.addRole(Role);
-		sendVerificationEmail(request,customer);
-		
-		model.addAttribute("pageTitle","Registration Succeeded");
-		
-		return "/register/register_success";
-		}else {
-			model.addAttribute("pageTitle","Registration Failed");
+		if (isUnique) {
+			service.registerCustomer(customer);
+			Role Role = roleRepo.getRoleById(2);
+			customer.addRole(Role);
+			sendVerificationEmail(request, customer);
+
+			model.addAttribute("pageTitle", "Registration Succeeded");
+
+			return "/register/register_success";
+		} else {
+			model.addAttribute("pageTitle", "Registration Failed");
 			return "redirect:register/register_customer";
 		}
 	}
-	private void sendVerificationEmail(HttpServletRequest request, User customer) throws UnsupportedEncodingException, MessagingException {
+
+	// send verification email to new user customer registration Unregistered User
+	private void sendVerificationEmail(HttpServletRequest request, User customer)
+			throws UnsupportedEncodingException, MessagingException {
 		EmailSettingBag emailSettings = settingService.getEmailSettings();
 		JavaMailSenderImpl mailSender = Utility.prepareMailSender(emailSettings);
-		
+
 		String toAddress = customer.getEmail();
 		String subject = emailSettings.getCustomerVerifySubject();
 		String content = emailSettings.getCustomerVerifyContent();
-		
+
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
-		
-		helper.setFrom(emailSettings.getFromAddress(),emailSettings.getSenderName());
+
+		helper.setFrom(emailSettings.getFromAddress(), emailSettings.getSenderName());
 		helper.setTo(toAddress);
 		helper.setSubject(subject);
-		
+
 		content = content.replace("[[name]]", customer.getFullName());
-		
-		String verifyURL = Utility.getSiteURL(request)+ "/verify?code=" +customer.getVerificationCode();
-		
+		String verifyURL = Utility.getSiteURL(request) + "/verify?code=" + customer.getVerificationCode();
 		content = content.replace("[[URL]]", verifyURL);
-		
-		helper.setText(content,true);
-		
+		helper.setText(content, true);
 		mailSender.send(message);
-		
-		System.out.println("to address:"+ toAddress);
-		System.out.println("Verify URL:"+ verifyURL);
-		
+
+		System.out.println("to address:" + toAddress);
+		System.out.println("Verify URL:" + verifyURL);
 	}
-	
+
+	// verifying process Unregistered User
 	@GetMapping("/verify")
 	public String verifyAccount(@Param("code") String code, Model model) {
 		boolean verified = service.verify(code);

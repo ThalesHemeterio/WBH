@@ -11,9 +11,10 @@
     <div th:replace="navigation2 :: social_menu"></div>
 
         <!-- Main Page Heading -->
-        <div class="col-12 text-center mt-5">
+  <div class="col-12 text-center mt-4">
             <h1 class="display-4 pt-4">My Sessions</h1>
             <div class="border-top border-dark w-50 mx-auto my-3"></div>
+            <p class="lead">Manage your booked sessions.</p>
         </div>
         
     <div th:if="${message != null}" class=" alert alert-success text-center">
@@ -65,7 +66,7 @@
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                	 <a class="btn btn-dark btn-md" th:href="@{'/customers/session/cancelbooking/' +${sessionn.id}}" th:userId="${sessionn.id}" title="Cancel this Booking">Cancel Booking</a>
+                                	 <a class="btn btn-dark btn-md" th:href="@{'/customers/search/cancelbooking/' +${sessionn.id}}" th:userId="${sessionn.id}" title="Cancel this Booking">Cancel Booking</a>
                                      <a class="btn btn-secondary btn-outline-dark btn-md" th:href="@{'/customers/session/review/' +${sessionn.id}}" th:userId="${sessionn.id}" title="Review this Session">Review Session</a>
                                 </div>
                             </form>
@@ -76,6 +77,39 @@
             </div>
         </div>
         <!-- End of Section to be filled-->
+
+<!-- Pagination -->
+	<div class="text-center m-1"  th:if="${totalItems >0}">
+		<span> Showing users [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+	</div>
+	<div class="text-center m-1"  th:unless="${totalItems >0}">
+		<span> No Users Found</span>
+	</div>
+	<div th:if="${totalPages > 1}">
+	<nav>
+  		<ul class="pagination justify-content-center flex-wrap">
+		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link10(1, 'First')"></a>
+		    </li>
+		    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link10(${currentPage-1}, 'Previous')"></a>
+		    </li>
+		    
+		    <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" 
+		    	th:each="i : ${#numbers.sequence(1,totalPages)}">
+		    	<a th:replace="fragmentsAdmin :: page_link10(${i}, ${i})"></a>
+		    </li>
+		    
+		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link10(${currentPage+1}, 'Next')"></a>
+		    </li>
+		    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+		    	<a th:replace="fragmentsAdmin :: page_link10(${totalPages}, 'Last')"></a>
+		    </li>
+ 	 	</ul>
+	</nav>
+	</div>
+	<!-- End of Pagination -->
 
     </div> <!-- End Social Media Sticky -->
  <!-- Alert delete confirmation -->
